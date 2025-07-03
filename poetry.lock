@@ -37,6 +37,17 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-restframework"
+version = "0.0.1"
+description = "django-restframework"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "django-restframework-0.0.1.tar.gz", hash = "sha256:2bec9265463693ada558ad9a58c31f6f3de005a932fbfeaadf983c5c9f3b7058"},
+]
+
+[[package]]
 name = "pillow"
 version = "11.3.0"
 description = "Python Imaging Library (Fork)"
@@ -173,4 +184,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13"
-content-hash = "e1ada9aaa6704b2151c841b8809e3458305adc70afadea15c84e8b4e8213276b"
+content-hash = "99d0a67885974b389f6fa06c0b94e52b374b7f3795fae703137e379315b8c918"
