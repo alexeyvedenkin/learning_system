@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     'rest_framework',
+    'users'
 ]
 
 MIDDLEWARE = [
@@ -96,10 +97,10 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-AUTH_USER_MODEL = "users.CustomUser"
-
-LOGIN_REDIRECT_URL = "/"
-LOGOUT_REDIRECT_URL = "/"
+# AUTH_USER_MODEL = "users.User"
+#
+# LOGIN_REDIRECT_URL = "/"
+# LOGOUT_REDIRECT_URL = "/"
 
 EMAIL_HOST = os.getenv("EMAIL_HOST")
 EMAIL_PORT = os.getenv("EMAIL_PORT")
@@ -119,5 +120,3 @@ if CACHE_ENABLED:
             "LOCATION": os.getenv("LOCATION"),
         }
     }
-
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
