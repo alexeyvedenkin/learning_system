@@ -52,6 +52,18 @@ files = [
 django = ">=4.2"
 
 [[package]]
+name = "include"
+version = "0.2.2"
+description = "Dynamic import from files and other sources"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "include-0.2.2-py2.py3-none-any.whl", hash = "sha256:58c7d81ba82b92ed432919aaa019bdde7258c569bfd85f1ea44a525576b20529"},
+    {file = "include-0.2.2.tar.gz", hash = "sha256:37c2c6854f145bce050e75847c8da17039bdfae76d2c7e95bf531eaad2148e69"},
+]
+
+[[package]]
 name = "pillow"
 version = "11.3.0"
 description = "Python Imaging Library (Fork)"
@@ -223,4 +235,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13"
-content-hash = "d358b5f9d8efa6e9d0f8de8222e05d5a1dd27319f466ee8fbb1393279806270d"
+content-hash = "6af7d274e99dc17af6a8bf0d1798048d8b598807cbe3f2a454a0af4866b391cb"

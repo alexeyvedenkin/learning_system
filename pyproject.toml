@@ -12,7 +12,8 @@ dependencies = [
     "pillow (>=11.3.0,<12.0.0)",
     "psycopg2 (>=2.9.10,<3.0.0)",
     "python-dotenv (>=1.1.1,<2.0.0)",
-    "djangorestframework (>=3.16.0,<4.0.0)"
+    "djangorestframework (>=3.16.0,<4.0.0)",
+    "include (>=0.2.2,<0.3.0)"
 ]
 
 

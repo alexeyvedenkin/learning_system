@@ -1,4 +1,5 @@
 from django.db import models
+from rest_framework import viewsets, generics
 
 
 class Course(models.Model):
