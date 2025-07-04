@@ -1,8 +1,7 @@
 import os
-
 from pathlib import Path
-from dotenv import load_dotenv
 
+from dotenv import load_dotenv
 
 load_dotenv(override=True)
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -113,7 +112,7 @@ EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL", False) == "True"
 SERVER_EMAIL = EMAIL_HOST_USER
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-CACHE_ENABLED=True
+CACHE_ENABLED = True
 if CACHE_ENABLED:
     CACHES = {
         "default": {
