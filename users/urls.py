@@ -6,7 +6,7 @@ from users.views import UserViewSet
 app_name = UsersConfig.name
 
 router = SimpleRouter()
-router.register('', UserViewSet)
+router.register('user', UserViewSet)
 
 urlpatterns = []
 
