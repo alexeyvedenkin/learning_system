@@ -17,3 +17,26 @@ class User(AbstractUser):
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
+
+
+class Payment(models.Model):
+    # Связь с пользователем
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
+    # Дата оплаты
+    payment_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата оплаты')
+    # Связь с курсом
+    course = models.ForeignKey('materials.Course', on_delete=models.CASCADE, verbose_name='Оплаченный курс')
+    # Связь с уроком
+    lesson = models.ForeignKey('materials.Lesson', on_delete=models.CASCADE, verbose_name='Оплаченный урок')
+    # Сумма оплаты
+    amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Сумма оплаты')
+    # Способ оплаты: наличные или перевод
+    PAYMENT_METHODS = [
+        ('cash', 'Наличные'),
+        ('transfer', 'Перевод на счёт'),
+    ]
+    payment_method = models.CharField(max_length=10, choices=PAYMENT_METHODS, verbose_name='Способ оплаты')
+
+    class Meta:
+        verbose_name = 'Платеж'
+        verbose_name_plural = 'Платежи'
