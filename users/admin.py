@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from users.models import User
+from users.models import Payment, User
 
 
 @admin.register(User)
@@ -13,3 +13,10 @@ class UserAdmin(admin.ModelAdmin):
         return ", ".join([group.name for group in obj.groups.all()])
 
     get_groups.short_description = "Groups"
+
+
+@admin.register(Payment)
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = ("id", "user", "payment_date", "course", "lesson", "amount", "payment_method")
+    list_filter = ("user", "payment_date", "course", "lesson", "amount", "payment_method")
+    search_fields = ("payment_method",)
