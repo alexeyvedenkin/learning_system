@@ -28,7 +28,7 @@ class UserManager(BaseUserManager):
         username = (first_name + last_name).replace(" ", "")  # Убираем пробелы
 
         # Создаем нового пользователя без передачи username
-        user = self.model(email=email, first_name=first_name, last_name=last_name, **extra_fields)
+        user = self.model(email=email, username=username, first_name=first_name, last_name=last_name, **extra_fields)
 
         # Устанавливаем пароль
         user.set_password(password)
