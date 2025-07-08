@@ -1,0 +1,44 @@
+[
+    {
+        "id": 2,
+        "name": "JavaScript",
+        "preview": "",
+        "description": "It too difficult"
+    },
+    {
+        "id": 1,
+        "name": "Python",
+        "preview": "",
+        "description": "It too difficult"
+    },
+    {
+        "id": 3,
+        "name": "Иностранные языки",
+        "preview": "",
+        "description": "Иностранные языки"
+    },
+    {
+        "id": 4,
+        "name": "Бухгалтерский учет",
+        "preview": "",
+        "description": "Бухгалтерский учет и аудит"
+    },
+    {
+        "id": 5,
+        "name": "Налоговое консультирование",
+        "preview": "",
+        "description": "Налоговое консультирование, оптимизация налогообложения"
+    },
+    {
+        "id": 6,
+        "name": "Биология",
+        "preview": "",
+        "description": "Все о живых организмах"
+    },
+    {
+        "id": 7,
+        "name": "Technicks",
+        "preview": "",
+        "description": "Все о технике"
+    }
+]

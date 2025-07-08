@@ -51,7 +51,12 @@ def export_tables_to_json(dbname: str) -> None:
         colnames = [desc[0] for desc in cur.description]
 
         # Создание списка словарей для фикстур
-        fixtures = [{col: serialize(value) for col, value in zip(colnames, row)} for row in rows]
+        fixtures = []
+        for row in rows:
+            fixture = {col: serialize(value) for col, value in zip(colnames, row)}
+            # Исключаем поле password, если оно есть
+            fixture.pop('password', None)  # Удаляет поле password, если оно существует
+            fixtures.append(fixture)
 
         # Сохранение в JSON-файл
         with open(os.path.join(output_dir, f"{table_name}.json"), 'w', encoding='utf-8') as json_file:

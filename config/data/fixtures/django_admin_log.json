@@ -1,0 +1,212 @@
+[
+    {
+        "id": 1,
+        "action_time": "2025-07-07 19:21:28",
+        "object_id": "3",
+        "object_repr": "Course object (3)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]",
+        "content_type_id": 7,
+        "user_id": 1
+    },
+    {
+        "id": 2,
+        "action_time": "2025-07-07 19:21:58",
+        "object_id": "4",
+        "object_repr": "Course object (4)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]",
+        "content_type_id": 7,
+        "user_id": 1
+    },
+    {
+        "id": 3,
+        "action_time": "2025-07-07 19:22:13",
+        "object_id": "4",
+        "object_repr": "Course object (4)",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"\\u0421\\u043e\\u0434\\u0435\\u0440\\u0436\\u0430\\u043d\\u0438\\u0435 \\u043a\\u0443\\u0440\\u0441\\u0430\"]}}]",
+        "content_type_id": 7,
+        "user_id": 1
+    },
+    {
+        "id": 4,
+        "action_time": "2025-07-07 19:22:47",
+        "object_id": "5",
+        "object_repr": "Course object (5)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]",
+        "content_type_id": 7,
+        "user_id": 1
+    },
+    {
+        "id": 5,
+        "action_time": "2025-07-07 19:24:22",
+        "object_id": "5",
+        "object_repr": "Lesson object (5)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]",
+        "content_type_id": 8,
+        "user_id": 1
+    },
+    {
+        "id": 6,
+        "action_time": "2025-07-07 19:25:02",
+        "object_id": "6",
+        "object_repr": "Lesson object (6)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]",
+        "content_type_id": 8,
+        "user_id": 1
+    },
+    {
+        "id": 7,
+        "action_time": "2025-07-07 19:25:45",
+        "object_id": "6",
+        "object_repr": "Course object (6)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]",
+        "content_type_id": 7,
+        "user_id": 1
+    },
+    {
+        "id": 8,
+        "action_time": "2025-07-07 19:26:59",
+        "object_id": "6",
+        "object_repr": "Course object (6)",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"\\u041d\\u0430\\u0437\\u0432\\u0430\\u043d\\u0438\\u0435 \\u043a\\u0443\\u0440\\u0441\\u0430\", \"\\u0421\\u043e\\u0434\\u0435\\u0440\\u0436\\u0430\\u043d\\u0438\\u0435 \\u043a\\u0443\\u0440\\u0441\\u0430\"]}}]",
+        "content_type_id": 7,
+        "user_id": 1
+    },
+    {
+        "id": 9,
+        "action_time": "2025-07-07 19:27:48",
+        "object_id": "7",
+        "object_repr": "Lesson object (7)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]",
+        "content_type_id": 8,
+        "user_id": 1
+    },
+    {
+        "id": 10,
+        "action_time": "2025-07-07 19:29:31",
+        "object_id": "8",
+        "object_repr": "Lesson object (8)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]",
+        "content_type_id": 8,
+        "user_id": 1
+    },
+    {
+        "id": 11,
+        "action_time": "2025-07-07 19:30:29",
+        "object_id": "9",
+        "object_repr": "Lesson object (9)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]",
+        "content_type_id": 8,
+        "user_id": 1
+    },
+    {
+        "id": 12,
+        "action_time": "2025-07-07 19:31:45",
+        "object_id": "10",
+        "object_repr": "Lesson object (10)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]",
+        "content_type_id": 8,
+        "user_id": 1
+    },
+    {
+        "id": 13,
+        "action_time": "2025-07-07 19:37:39",
+        "object_id": "11",
+        "object_repr": "Lesson object (11)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]",
+        "content_type_id": 8,
+        "user_id": 1
+    },
+    {
+        "id": 14,
+        "action_time": "2025-07-07 19:38:14",
+        "object_id": "12",
+        "object_repr": "Lesson object (12)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]",
+        "content_type_id": 8,
+        "user_id": 1
+    },
+    {
+        "id": 15,
+        "action_time": "2025-07-07 19:38:49",
+        "object_id": "13",
+        "object_repr": "Lesson object (13)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]",
+        "content_type_id": 8,
+        "user_id": 1
+    },
+    {
+        "id": 16,
+        "action_time": "2025-07-07 19:41:53",
+        "object_id": "14",
+        "object_repr": "Lesson object (14)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]",
+        "content_type_id": 8,
+        "user_id": 1
+    },
+    {
+        "id": 17,
+        "action_time": "2025-07-07 19:42:13",
+        "object_id": "15",
+        "object_repr": "Lesson object (15)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]",
+        "content_type_id": 8,
+        "user_id": 1
+    },
+    {
+        "id": 18,
+        "action_time": "2025-07-07 19:44:54",
+        "object_id": "16",
+        "object_repr": "Lesson object (16)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]",
+        "content_type_id": 8,
+        "user_id": 1
+    },
+    {
+        "id": 19,
+        "action_time": "2025-07-08 08:14:57",
+        "object_id": "8",
+        "object_repr": "Payment object (8)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]",
+        "content_type_id": 9,
+        "user_id": 1
+    },
+    {
+        "id": 20,
+        "action_time": "2025-07-08 08:15:23",
+        "object_id": "9",
+        "object_repr": "Payment object (9)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]",
+        "content_type_id": 9,
+        "user_id": 1
+    },
+    {
+        "id": 21,
+        "action_time": "2025-07-08 08:15:57",
+        "object_id": "10",
+        "object_repr": "Payment object (10)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]",
+        "content_type_id": 9,
+        "user_id": 1
+    }
+]
