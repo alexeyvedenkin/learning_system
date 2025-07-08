@@ -1,4 +1,6 @@
-from django_filters.rest_framework import DjangoFilterBackend
+from django_filters.rest_framework import DjangoFilterBackend, filters
+from rest_framework.filters import OrderingFilter
+
 from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import ModelViewSet
@@ -21,9 +23,15 @@ class PaymentCreateApiView(CreateAPIView):
 class PaymentListApiView(ListAPIView):
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_fields = ("course", "lesson", "payment_method", "user",)
+    ordering_fields = ("payment_date",)
+    ordering = ("payment_date",)
 
+    def list(self, request, *args, **kwargs):
+        # Выводим запрашиваемый порядок сортировки
+        print(f"Запрашиваемый порядок сортировки: {request.query_params.get('ordering')}")
+        return super().list(request, *args, **kwargs)
 
 class PaymentRetrieveApiView(RetrieveAPIView):
     queryset = Payment.objects.all()
