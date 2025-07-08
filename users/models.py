@@ -18,6 +18,9 @@ class User(AbstractUser):
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
 
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}, email: {self.email}"
+
 
 class Payment(models.Model):
     # Связь с пользователем
