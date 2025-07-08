@@ -15,12 +15,39 @@ class Command(BaseCommand):
             self.stdout.write(self.style.ERROR('Пользователь не найден.'))
             return
 
-        # Получаем курс и урок
-        course = Course.objects.first()  # Получаем первый курс, можно изменить логику
-        lesson = Lesson.objects.first()  # Получаем первый урок, можно изменить логику
+        # Получаем все курсы и выводим их для выбора
+        courses = Course.objects.all()
+        if not courses:
+            self.stdout.write(self.style.ERROR('Нет доступных курсов.'))
+            return
 
-        if not course or not lesson:
-            self.stdout.write(self.style.ERROR('Курс или урок не найдены.'))
+        self.stdout.write('Доступные курсы:')
+        for i, course in enumerate(courses, 1):
+            self.stdout.write(f'{i}. {course.name}')  # Выводим названия курсов
+
+        # Запрашиваем, будет ли оплата за курс или за урок
+        payment_type = input('Платеж за курс или урок? (введите "курс" или "урок"): ').strip().lower()
+
+        if payment_type == 'курс':
+            course_index = int(input('Выберите курс по номеру: ')) - 1
+            course = courses[course_index]
+
+            # Получаем все уроки, связанные с выбранным курсом
+            lessons = Lesson.objects.filter(theme=course)
+            if lessons:
+                for lesson in lessons:
+                    lesson.paid = True  # Отмечаем все уроки как оплаченные
+            else:
+                self.stdout.write(self.style.ERROR('Нет доступных уроков для этого курса.'))
+                return
+
+        elif payment_type == 'урок':
+            lesson_index = int(input('Введите номер урока из доступных: ')) - 1
+            lesson = Lesson.objects.all()[lesson_index]  # Получаем урок без привязки к курсу
+            course = None  # Урок не привязан к курсу
+
+        else:
+            self.stdout.write(self.style.ERROR('Некорректный ввод типа платежа.'))
             return
 
         # Сумма и способ оплаты
@@ -30,7 +57,7 @@ class Command(BaseCommand):
         # Создаем новый платеж
         Payment.objects.create(
             user=user,
-            course=course,
+            course=course,  # Здесь может быть None для отдельных уроков
             lesson=lesson,
             amount=amount,
             payment_method=payment_method,
