@@ -24,7 +24,7 @@ class User(AbstractUser):
 
 class Payment(models.Model):
     # Связь с пользователем
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь', related_name='payments')
     # Дата оплаты
     payment_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата оплаты')
     # Связь с курсом
