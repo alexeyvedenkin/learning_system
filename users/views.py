@@ -14,6 +14,10 @@ class UserViewSet(ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
 
+    def get_queryset(self):
+        # Здесь вы можете настроить выборку, если это необходимо
+        return super().get_queryset().prefetch_related('payments')
+
 
 class PaymentCreateApiView(CreateAPIView):
     queryset = Payment.objects.all()

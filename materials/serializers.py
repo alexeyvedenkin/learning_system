@@ -13,7 +13,7 @@ class LessonSerializer(ModelSerializer):
 class CourseSerializer(ModelSerializer):
 
     # Добавляем новое поле для количества уроков
-    lesson_count = SerializerMethodField()  # Создаем поле для вычисляемого значения
+    lesson_count = SerializerMethodField()
     # Добавляем список уроков
     lessons = LessonSerializer(many=True, read_only=True)
 
