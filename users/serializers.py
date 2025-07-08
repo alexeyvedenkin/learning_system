@@ -5,6 +5,7 @@ from users.models import User, Payment
 
 
 class UserSerializer(ModelSerializer):
+
     # Добавляем поле password, чтобы оно стало доступным при создании пользователя
     password = serializers.CharField(write_only=True)  # Доступно только для записи
 
@@ -22,8 +23,6 @@ class UserSerializer(ModelSerializer):
 
 
 class PaymentSerializer(ModelSerializer):
-    # Добавляем поле password, чтобы оно стало доступным при создании пользователя
-    password = serializers.CharField(write_only=True)  # Доступно только для записи
 
     class Meta:
         model = Payment
