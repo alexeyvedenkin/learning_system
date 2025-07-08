@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
-from users.models import User
+from users.models import User, Payment
 
 
 class UserSerializer(ModelSerializer):
@@ -19,3 +19,12 @@ class UserSerializer(ModelSerializer):
         user.set_password(password)  # Устанавливаем пароль здесь
         user.save()  # Сохраняем пользователя
         return user
+
+
+class PaymentSerializer(ModelSerializer):
+    # Добавляем поле password, чтобы оно стало доступным при создании пользователя
+    password = serializers.CharField(write_only=True)  # Доступно только для записи
+
+    class Meta:
+        model = Payment
+        fields = '__all__'
