@@ -1,8 +1,9 @@
 from django_filters.rest_framework import DjangoFilterBackend, filters
+from rest_framework import permissions
 from rest_framework.filters import OrderingFilter
 
 from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
 from users.models import User, Payment
@@ -12,10 +13,15 @@ from users.serializers import UserSerializer, PaymentSerializer
 class UserViewSet(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]  # Закрываем доступ ко всем методам для неавторизованных пользователей
+
+    def get_permissions(self):
+        # Позволяем доступ только для создания и получения (CRUD) неавторизованным пользователям
+        if self.action in ['create', 'list']:
+            return [permissions.AllowAny()]  # Открываем доступ для регистрации и списка пользователей
+        return super().get_permissions()  # Для остальных методов - доступ только для авторизованных
 
     def get_queryset(self):
-        # Здесь вы можете настроить выборку, если это необходимо
         return super().get_queryset().prefetch_related('payments')
 
 
