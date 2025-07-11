@@ -1,0 +1,130 @@
+[
+    {
+        "id": 2,
+        "title": "Django",
+        "description": "It fine",
+        "preview": "",
+        "video_file": "",
+        "theme_id": 1
+    },
+    {
+        "id": 3,
+        "title": "C++",
+        "description": "Extreme difficult",
+        "preview": "",
+        "video_file": "",
+        "theme_id": null
+    },
+    {
+        "id": 4,
+        "title": "ORM",
+        "description": "Work with databases",
+        "preview": "",
+        "video_file": "",
+        "theme_id": 1
+    },
+    {
+        "id": 5,
+        "title": "Учет денежных средств",
+        "description": "Учет денежных средств в кассе и на расчетных счетах",
+        "preview": "",
+        "video_file": "",
+        "theme_id": 4
+    },
+    {
+        "id": 6,
+        "title": "Учет основных средств",
+        "description": "Учет основных средств, прав пользования активами",
+        "preview": "",
+        "video_file": "",
+        "theme_id": 4
+    },
+    {
+        "id": 7,
+        "title": "Учет доходов и расходов",
+        "description": "Учет доходов и расходов, формирование финансовых результатов",
+        "preview": "",
+        "video_file": "",
+        "theme_id": 4
+    },
+    {
+        "id": 8,
+        "title": "Налог на добавленную стоимость",
+        "description": "Учет и декларирование НДС",
+        "preview": "",
+        "video_file": "",
+        "theme_id": 5
+    },
+    {
+        "id": 9,
+        "title": "Налог на прибыль",
+        "description": "Регистры учета, формирование деклараций",
+        "preview": "",
+        "video_file": "",
+        "theme_id": 5
+    },
+    {
+        "id": 10,
+        "title": "Налог на доходы физических лиц",
+        "description": "Учет НДФЛ у налогового агента. \r\nДекларирование налоговых вычетов самостоятельно.",
+        "preview": "",
+        "video_file": "",
+        "theme_id": 5
+    },
+    {
+        "id": 11,
+        "title": "England",
+        "description": "Основы английского языка",
+        "preview": "",
+        "video_file": "",
+        "theme_id": 3
+    },
+    {
+        "id": 12,
+        "title": "French",
+        "description": "Основы французского языка",
+        "preview": "",
+        "video_file": "",
+        "theme_id": 3
+    },
+    {
+        "id": 13,
+        "title": "Chinese",
+        "description": "Основы китайского языка",
+        "preview": "",
+        "video_file": "",
+        "theme_id": 3
+    },
+    {
+        "id": 14,
+        "title": "Ботаника",
+        "description": "Растительный мир",
+        "preview": "",
+        "video_file": "",
+        "theme_id": 6
+    },
+    {
+        "id": 15,
+        "title": "Зоология",
+        "description": "Животный мир",
+        "preview": "",
+        "video_file": "",
+        "theme_id": 6
+    },
+    {
+        "id": 16,
+        "title": "DRF",
+        "description": "It's easy, but difficult",
+        "preview": "",
+        "video_file": "",
+        "theme_id": 1
+    },
+    {
+        "id": 17,
+        "title": "Management",
+        "description": null,
+        "preview": "",
+        "video_file": "",
+        "theme_id": null
+    }
+]

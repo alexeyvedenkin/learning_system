@@ -1,0 +1,218 @@
+[
+    {
+        "id": 1,
+        "name": "Can add log entry",
+        "content_type_id": 1,
+        "codename": "add_logentry"
+    },
+    {
+        "id": 2,
+        "name": "Can change log entry",
+        "content_type_id": 1,
+        "codename": "change_logentry"
+    },
+    {
+        "id": 3,
+        "name": "Can delete log entry",
+        "content_type_id": 1,
+        "codename": "delete_logentry"
+    },
+    {
+        "id": 4,
+        "name": "Can view log entry",
+        "content_type_id": 1,
+        "codename": "view_logentry"
+    },
+    {
+        "id": 5,
+        "name": "Can add permission",
+        "content_type_id": 2,
+        "codename": "add_permission"
+    },
+    {
+        "id": 6,
+        "name": "Can change permission",
+        "content_type_id": 2,
+        "codename": "change_permission"
+    },
+    {
+        "id": 7,
+        "name": "Can delete permission",
+        "content_type_id": 2,
+        "codename": "delete_permission"
+    },
+    {
+        "id": 8,
+        "name": "Can view permission",
+        "content_type_id": 2,
+        "codename": "view_permission"
+    },
+    {
+        "id": 9,
+        "name": "Can add group",
+        "content_type_id": 3,
+        "codename": "add_group"
+    },
+    {
+        "id": 10,
+        "name": "Can change group",
+        "content_type_id": 3,
+        "codename": "change_group"
+    },
+    {
+        "id": 11,
+        "name": "Can delete group",
+        "content_type_id": 3,
+        "codename": "delete_group"
+    },
+    {
+        "id": 12,
+        "name": "Can view group",
+        "content_type_id": 3,
+        "codename": "view_group"
+    },
+    {
+        "id": 13,
+        "name": "Can add content type",
+        "content_type_id": 4,
+        "codename": "add_contenttype"
+    },
+    {
+        "id": 14,
+        "name": "Can change content type",
+        "content_type_id": 4,
+        "codename": "change_contenttype"
+    },
+    {
+        "id": 15,
+        "name": "Can delete content type",
+        "content_type_id": 4,
+        "codename": "delete_contenttype"
+    },
+    {
+        "id": 16,
+        "name": "Can view content type",
+        "content_type_id": 4,
+        "codename": "view_contenttype"
+    },
+    {
+        "id": 17,
+        "name": "Can add session",
+        "content_type_id": 5,
+        "codename": "add_session"
+    },
+    {
+        "id": 18,
+        "name": "Can change session",
+        "content_type_id": 5,
+        "codename": "change_session"
+    },
+    {
+        "id": 19,
+        "name": "Can delete session",
+        "content_type_id": 5,
+        "codename": "delete_session"
+    },
+    {
+        "id": 20,
+        "name": "Can view session",
+        "content_type_id": 5,
+        "codename": "view_session"
+    },
+    {
+        "id": 21,
+        "name": "Can add Пользователь",
+        "content_type_id": 6,
+        "codename": "add_user"
+    },
+    {
+        "id": 22,
+        "name": "Can change Пользователь",
+        "content_type_id": 6,
+        "codename": "change_user"
+    },
+    {
+        "id": 23,
+        "name": "Can delete Пользователь",
+        "content_type_id": 6,
+        "codename": "delete_user"
+    },
+    {
+        "id": 24,
+        "name": "Can view Пользователь",
+        "content_type_id": 6,
+        "codename": "view_user"
+    },
+    {
+        "id": 25,
+        "name": "Can add Платеж",
+        "content_type_id": 9,
+        "codename": "add_payment"
+    },
+    {
+        "id": 26,
+        "name": "Can change Платеж",
+        "content_type_id": 9,
+        "codename": "change_payment"
+    },
+    {
+        "id": 27,
+        "name": "Can delete Платеж",
+        "content_type_id": 9,
+        "codename": "delete_payment"
+    },
+    {
+        "id": 28,
+        "name": "Can view Платеж",
+        "content_type_id": 9,
+        "codename": "view_payment"
+    },
+    {
+        "id": 29,
+        "name": "Can add Курс",
+        "content_type_id": 7,
+        "codename": "add_course"
+    },
+    {
+        "id": 30,
+        "name": "Can change Курс",
+        "content_type_id": 7,
+        "codename": "change_course"
+    },
+    {
+        "id": 31,
+        "name": "Can delete Курс",
+        "content_type_id": 7,
+        "codename": "delete_course"
+    },
+    {
+        "id": 32,
+        "name": "Can view Курс",
+        "content_type_id": 7,
+        "codename": "view_course"
+    },
+    {
+        "id": 33,
+        "name": "Can add Урок",
+        "content_type_id": 8,
+        "codename": "add_lesson"
+    },
+    {
+        "id": 34,
+        "name": "Can change Урок",
+        "content_type_id": 8,
+        "codename": "change_lesson"
+    },
+    {
+        "id": 35,
+        "name": "Can delete Урок",
+        "content_type_id": 8,
+        "codename": "delete_lesson"
+    },
+    {
+        "id": 36,
+        "name": "Can view Урок",
+        "content_type_id": 8,
+        "codename": "view_lesson"
+    }
+]

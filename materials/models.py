@@ -10,10 +10,16 @@ class Course(models.Model):
         verbose_name = 'Курс'
         verbose_name_plural = 'Курсы'
 
+    def __str__(self):
+        return self.name
+
 
 class Lesson(models.Model):
     title = models.CharField(max_length=100, verbose_name='Название урока')
-    theme = models.ForeignKey(Course, on_delete=models.SET_NULL, verbose_name='Из курса', blank=True, null=True)
+    theme = models.ForeignKey(Course, related_name='lessons',
+                              on_delete=models.SET_NULL,
+                              verbose_name='Из курса', blank=True, null=True
+                              )
     description = models.TextField(verbose_name='Содержание урока', blank=True, null=True)
     preview = models.ImageField(upload_to='lessons/previews', blank=True, null=True)
     video_file = models.FileField(upload_to='lessons/videos', blank=True, null=True)
@@ -21,3 +27,6 @@ class Lesson(models.Model):
     class Meta:
         verbose_name = 'Урок'
         verbose_name_plural = 'Уроки'
+
+    def __str__(self):
+        return self.title
