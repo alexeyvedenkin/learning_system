@@ -22,6 +22,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'django_filters',
+    'rest_framework_simplejwt',
 
     'users',
     'materials',
@@ -127,3 +128,9 @@ if CACHE_ENABLED:
             "LOCATION": os.getenv("LOCATION"),
         }
     }
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}

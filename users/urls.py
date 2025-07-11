@@ -1,5 +1,6 @@
 from django.urls import path
 from rest_framework.routers import SimpleRouter
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from users.apps import UsersConfig
 from users.views import UserViewSet, PaymentListApiView, PaymentCreateApiView, PaymentRetrieveApiView, \
@@ -11,6 +12,9 @@ router = SimpleRouter()
 router.register('user', UserViewSet)
 
 urlpatterns = [
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
     path('payments/', PaymentListApiView.as_view(), name='payments_list'),
     path('payments/create/', PaymentCreateApiView.as_view(), name='payments_create'),
     path('payments/<int:pk>/', PaymentRetrieveApiView.as_view(), name='payments_retrieve'),
