@@ -1,5 +1,4 @@
 from django_filters.rest_framework import DjangoFilterBackend, filters
-from rest_framework import permissions
 from rest_framework.filters import OrderingFilter
 
 from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView
@@ -18,7 +17,7 @@ class UserViewSet(ModelViewSet):
     def get_permissions(self):
         # Позволяем доступ только для создания и получения (CRUD) неавторизованным пользователям
         if self.action in ['create', 'list']:
-            return [permissions.AllowAny()]  # Открываем доступ для регистрации и списка пользователей
+            return [AllowAny()]  # Открываем доступ для регистрации и списка пользователей
         return super().get_permissions()  # Для остальных методов - доступ только для авторизованных
 
     def get_queryset(self):
