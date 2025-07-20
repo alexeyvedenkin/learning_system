@@ -1,4 +1,5 @@
 from django.urls import path
+from rest_framework.permissions import AllowAny
 from rest_framework.routers import SimpleRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
@@ -12,8 +13,8 @@ router = SimpleRouter()
 router.register('user', UserViewSet)
 
 urlpatterns = [
-    path('login/', TokenObtainPairView.as_view(), name='login'),
-    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('login/', TokenObtainPairView.as_view(permission_classes=(AllowAny,)), name='login'),
+    path('token/refresh/', TokenRefreshView.as_view(permission_classes=(AllowAny,)), name='token_refresh'),
 
     path('payments/', PaymentListApiView.as_view(), name='payments_list'),
     path('payments/create/', PaymentCreateApiView.as_view(), name='payments_create'),
