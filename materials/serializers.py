@@ -30,6 +30,7 @@ class CourseSerializer(ModelSerializer):
         """ Метод для получения количества уроков """
         return obj.lessons.count()  # Используем обратное отношение для доступа к урокам и считаем их
 
+
     class CourseSerializer(ModelSerializer):
         # Добавляем новое поле для количества уроков
         lesson_count = SerializerMethodField()
