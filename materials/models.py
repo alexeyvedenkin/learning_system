@@ -1,10 +1,13 @@
 from django.db import models
 
+from users.models import User
+
 
 class Course(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название курса')
     preview = models.ImageField(upload_to='courses/previews', blank=True, null=True)
     description = models.TextField(verbose_name='Содержание курса', blank=True, null=True)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Автор курса")
 
     class Meta:
         verbose_name = 'Курс'
@@ -17,9 +20,10 @@ class Course(models.Model):
 class Lesson(models.Model):
     title = models.CharField(max_length=100, verbose_name='Название урока')
     theme = models.ForeignKey(Course, related_name='lessons',
-                              on_delete=models.SET_NULL,
+                              on_delete=models.PROTECT,
                               verbose_name='Из курса', blank=True, null=True
                               )
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Автор урока")
     description = models.TextField(verbose_name='Содержание урока', blank=True, null=True)
     preview = models.ImageField(upload_to='lessons/previews', blank=True, null=True)
     video_file = models.FileField(upload_to='lessons/videos', blank=True, null=True)

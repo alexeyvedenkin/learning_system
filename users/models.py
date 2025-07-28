@@ -19,7 +19,7 @@ class User(AbstractUser):
         verbose_name_plural = 'Пользователи'
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name}, email: {self.email}"
+        return f"{self.last_name} {self.first_name}"
 
 
 class Payment(models.Model):

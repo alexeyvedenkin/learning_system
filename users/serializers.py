@@ -20,7 +20,7 @@ class UserSerializer(ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('email', 'first_name', 'last_name', 'phone', 'city', 'is_active', 'password', 'payments')
+        fields = ('id', 'email', 'first_name', 'last_name', 'phone', 'city', 'is_active', 'password', 'payments')
 
     def create(self, validated_data):
         # Удаляем пароль из данных для создания пользователя
