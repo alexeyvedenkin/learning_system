@@ -1,9 +1,62 @@
 from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
+from rest_framework.test import APITestCase
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import Subscription, User
 from materials.models import Course
+
+
+class UserTests(APITestCase):
+
+    def setUp(self):
+        """ Создаем тестового пользователя перед каждым тестом """
+        self.test_user = User.objects.create_user(
+            email='test@example.com',
+            password='password123',
+            first_name='Тест',
+            last_name='Пользователь'
+        )
+
+    def test_create_user(self):
+        """ Тестируем создание нового пользователя """
+        url = reverse('user-list')  # Получаем URL для эндпоинта списка пользователей
+        data = {
+            'email': 'newuser@example.com',
+            'password': 'newpassword',
+            'first_name': 'Новый',
+            'last_name': 'Пользователь'
+        }
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)  # Проверяем, что статус 201 (Создано)
+
+    def test_list_users(self):
+        """ Тестируем получение списка пользователей """
+        url = reverse('user-list')  # Получаем URL для списка пользователей
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)  # Проверяем, что доступ закрыт для неавторизованных
+
+    def test_retrieve_user(self):
+        """ Тестируем получение пользовательских данных """
+        url = reverse('user-detail', args=[self.test_user.id])  # URL для получения конкретного пользователя
+        self.client.login(email='test@example.com', password='password123')  # Авторизуемся
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)  # Проверяем, что статус 200 (Успех)
+
+    def test_update_user(self):
+        """ Тестируем обновление информации о пользователе """
+        url = reverse('user-detail', args=[self.test_user.id])
+        self.client.login(email='test@example.com', password='password123')
+        data = {'first_name': 'Обновленный'}
+        response = self.client.patch(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)  # Проверяем, что статус 200
+
+    def test_delete_user(self):
+        """ Тестируем удаление пользователя """
+        url = reverse('user-detail', args=[self.test_user.id])
+        self.client.login(email='test@example.com', password='password123')
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)  # Проверяем, что статус 204 (Нет содержимого)
 
 
 class SubscriptionAPITestCase(TestCase):
