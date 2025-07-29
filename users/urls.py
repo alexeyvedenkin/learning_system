@@ -22,7 +22,8 @@ urlpatterns = [
     path('payments/<int:pk>/update/', PaymentUpdateApiView.as_view(), name='payments_update'),
     path('payments/<int:pk>/delete/', PaymentDestroyApiView.as_view(), name='payments_delete'),
 
-    path('subscriptions/', SubscriptionAPIView.as_view(), name='subscriptions'),
+    path('subscriptions/', SubscriptionAPIView.as_view(), name='subscription-list'),  # для создания и получения подписок
+    path('subscriptions/<int:course_id>/', SubscriptionAPIView.as_view(), name='subscription-detail'),  # для удаления подписки
 ]
 
 urlpatterns += router.urls

@@ -72,24 +72,20 @@ class SubscriptionAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        user = request.user  # получаем текущего пользователя
-        course_id = request.data.get('course_id')  # получаем id курса из запроса
-        course_item = get_object_or_404(Course, id=course_id)  # получаем объект курса
-
-        # Проверяем, существует ли подписка
-        subs_item, created = Subscription.objects.get_or_create(user=user, course=course_item)
-        if created:
-            message = 'Подписка добавлена'
-        else:
-            message = 'Подписка уже существует'
-
-        return Response({"message": message}, status=status.HTTP_200_OK)
-
-    def delete(self, request, *args, **kwargs):
         user = request.user
         course_id = request.data.get('course_id')
         course_item = get_object_or_404(Course, id=course_id)
 
+        subs_item, created = Subscription.objects.get_or_create(user=user, course=course_item)
+        message = 'Подписка добавлена' if created else 'Подписка уже существует'
+        return Response({"message": message}, status=status.HTTP_200_OK)
+
+    def delete(self, request, course_id):
+        user = request.user
+        course_item = get_object_or_404(Course, id=course_id)
+
         # Удаляем подписку
-        Subscription.objects.filter(user=user, course=course_item).delete()
-        return Response({"message": "Подписка удалена"}, status=status.HTTP_204_NO_CONTENT)
+        deleted_count = Subscription.objects.filter(user=user, course=course_item).delete()
+        if deleted_count[0] > 0:
+            return Response({"message": "Подписка удалена"}, status=status.HTTP_204_NO_CONTENT)
+        return Response({"message": "Подписка не найдена"}, status=status.HTTP_404_NOT_FOUND)
