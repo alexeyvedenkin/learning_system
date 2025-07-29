@@ -3,8 +3,8 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import Subscription, User
-from materials.models import Course
+from .models import Subscription, User, Payment
+from materials.models import Course, Lesson
 
 
 class UserTests(APITestCase):
@@ -115,3 +115,51 @@ class SubscriptionAPITestCase(TestCase):
 
         response = self.client.delete(self.url_unsubscribe)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)  # Доступ запрещен
+
+
+class PaymentTests(APITestCase):
+    def setUp(self):
+        # Создаем тестового пользователя
+        self.user = User.objects.create_user(username='testuser', password='testpass')
+        # Создаем тестовые объекты курса и урока
+        self.course = Course.objects.create(title='Тестовый курс')
+        self.lesson = Lesson.objects.create(title='Тестовый урок', course=self.course)
+        # Создаем платёж
+        self.payment = Payment.objects.create(
+            user=self.user,
+            course=self.course,
+            lesson=self.lesson,
+            amount=100.00,
+            payment_method='cash'
+        )
+
+    def test_create_payment(self):
+        # URL для создания платежа
+        url = reverse('payment-create')
+        data = {
+            'user': self.user.id,
+            'course': self.course.id,
+            'lesson': self.lesson.id,
+            'amount': 150.00,
+            'payment_method': 'transfer'
+        }
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)  # Проверяем, что создание прошло успешно
+
+    def test_list_payments(self):
+        url = reverse('payment-list')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)  # Проверяем, что список доступен
+
+    def test_update_payment(self):
+        url = reverse('payment-update', args=[self.payment.id])
+        data = {
+            'amount': 200.00,
+        }
+        response = self.client.patch(url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)  # Проверяем, что обновление прошло успешно
+
+    def test_delete_payment(self):
+        url = reverse('payment-destroy', args=[self.payment.id])
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)  # Проверяем, что удаление прошло успешно
