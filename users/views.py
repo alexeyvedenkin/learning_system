@@ -1,15 +1,17 @@
 from django.http import JsonResponse
 from django_filters.rest_framework import DjangoFilterBackend, filters
+from rest_framework import status
 from rest_framework.filters import OrderingFilter
-
-from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView
+from rest_framework.generics import (CreateAPIView, DestroyAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView,
+                                     get_object_or_404)
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
-from users.models import User, Payment
-from users.serializers import UserSerializer, PaymentSerializer
+from materials.models import Course
+from users.models import Payment, Subscription, User
+from users.serializers import PaymentSerializer, UserSerializer
 
 
 class UserViewSet(ModelViewSet):
@@ -66,16 +68,28 @@ class PaymentDestroyApiView(DestroyAPIView):
     serializer_class = PaymentSerializer
 
 
-class SubscriptionView(APIView):
-    def post(self, request):
-        # Логика для добавления подписки
-        # Получение данных из запроса (например, user_id и course_id)
-        # Создание записи в Subscription
-        return JsonResponse({'status': 'подписка добавлена'})
+class SubscriptionAPIView(APIView):
+    permission_classes = [IsAuthenticated]
 
+    def post(self, request, *args, **kwargs):
+        user = request.user  # получаем текущего пользователя
+        course_id = request.data.get('course_id')  # получаем id курса из запроса
+        course_item = get_object_or_404(Course, id=course_id)  # получаем объект курса
 
-    def delete(self, request):
-        # Логика для удаления подписки
-        # Получение данных и удаление записи из Subscription
-        return JsonResponse({'status': 'подписка удалена'})
+        # Проверяем, существует ли подписка
+        subs_item, created = Subscription.objects.get_or_create(user=user, course=course_item)
+        if created:
+            message = 'Подписка добавлена'
+        else:
+            message = 'Подписка уже существует'
 
+        return Response({"message": message}, status=status.HTTP_200_OK)
+
+    def delete(self, request, *args, **kwargs):
+        user = request.user
+        course_id = request.data.get('course_id')
+        course_item = get_object_or_404(Course, id=course_id)
+
+        # Удаляем подписку
+        Subscription.objects.filter(user=user, course=course_item).delete()
+        return Response({"message": "Подписка удалена"}, status=status.HTTP_204_NO_CONTENT)
