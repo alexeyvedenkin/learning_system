@@ -5,6 +5,7 @@ from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import ModelSerializer
 
 from materials.models import Course, Lesson
+from users.models import Subscription
 from .validators import validate_youtube_link  # Импортируем валидатор
 
 
@@ -42,12 +43,11 @@ class CourseSerializer(ModelSerializer):
 
     class Meta:
         model = Course
-        fields = '__all__'
+        fields = ['id', 'title', 'description', 'is_subscribed']
 
     def get_lesson_count(self, obj):
         """ Метод для получения количества уроков """
         return obj.lessons.count()  # Используем обратное отношение для доступа к урокам и считаем их
-
 
     def validate(self, attrs):
         for lesson in attrs.get('lessons', []):
@@ -65,3 +65,7 @@ class CourseSerializer(ModelSerializer):
             links = re.findall(YOUTUBE_URL_PATTERN, text)  # Найти все YouTube ссылки
             for link in links:  # Проходим по каждой ссылке
                 validate_youtube_link(link[0])  # Вызов валидатора для каждой ссылки
+
+    def get_is_subscribed(self, obj):
+        user = self.context['request'].user  # Получаем текущего пользователя
+        return Subscription.objects.filter(user=user, course=obj).exists()  # Проверяем, есть ли подписка
