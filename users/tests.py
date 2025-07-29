@@ -3,8 +3,10 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import Subscription, User, Payment
+
 from materials.models import Course, Lesson
+
+from .models import Payment, Subscription, User
 
 
 class UserTests(APITestCase):
