@@ -6,8 +6,8 @@ from rest_framework.serializers import ModelSerializer
 
 from materials.models import Course, Lesson
 from users.models import Subscription
-from .validators import validate_youtube_link  # Импортируем валидатор
 
+from .validators import validate_youtube_link  # Импортируем валидатор
 
 # Регулярное выражение для проверки ссылок на YouTube
 YOUTUBE_URL_PATTERN = r'https?://(www\.)?(youtube\.com|youtu\.be)/'

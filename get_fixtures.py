@@ -1,10 +1,12 @@
 import json
 import os
-import psycopg2  # type: ignore
-from dotenv import load_dotenv
-from config.config import DATA_DIR
 from datetime import datetime  # Импортируем datetime для проверки типов
 from decimal import Decimal  # Импортируем Decimal для обработки
+
+import psycopg2  # type: ignore
+from dotenv import load_dotenv
+
+from config.config import DATA_DIR
 
 load_dotenv()
 
