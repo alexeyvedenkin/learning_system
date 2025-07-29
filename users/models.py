@@ -48,27 +48,9 @@ class Payment(models.Model):
 
 
 class Subscription(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь', related_name='subscriptions')
-    course = models.ForeignKey('materials.Course', on_delete=models.CASCADE, verbose_name='Подписка на курс')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
+    course = models.ForeignKey('materials.Course', on_delete=models.CASCADE, verbose_name='Курс')
 
     class Meta:
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
-
-
-# Эндпоинт для установки/удаления подписки
-class SubscriptionView(View):
-    def post(self, request):
-        # Создание подписки
-        user_id = request.POST.get('user_id')
-        course_id = request.POST.get('course_id')
-        subscription = Subscription(user_id=user_id, course_id=course_id)
-        subscription.save()
-        return JsonResponse({'message': 'Подписка создана'}, status=201)
-
-    def delete(self, request):
-        # Удаление подписки
-        user_id = request.POST.get('user_id')
-        course_id = request.POST.get('course_id')
-        Subscription.objects.filter(user_id=user_id, course_id=course_id).delete()
-        return JsonResponse({'message': 'Подписка удалена'}, status=204)

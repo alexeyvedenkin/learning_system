@@ -1,9 +1,11 @@
+from django.http import JsonResponse
 from django_filters.rest_framework import DjangoFilterBackend, filters
 from rest_framework.filters import OrderingFilter
 
 from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
 from users.models import User, Payment
@@ -62,3 +64,18 @@ class PaymentUpdateApiView(UpdateAPIView):
 class PaymentDestroyApiView(DestroyAPIView):
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
+
+
+class SubscriptionView(APIView):
+    def post(self, request):
+        # Логика для добавления подписки
+        # Получение данных из запроса (например, user_id и course_id)
+        # Создание записи в Subscription
+        return JsonResponse({'status': 'подписка добавлена'})
+
+
+    def delete(self, request):
+        # Логика для удаления подписки
+        # Получение данных и удаление записи из Subscription
+        return JsonResponse({'status': 'подписка удалена'})
+
