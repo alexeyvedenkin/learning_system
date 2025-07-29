@@ -8,7 +8,7 @@ class PaymentSerializer(ModelSerializer):
 
     class Meta:
         model = Payment
-        fields = '__all__'
+        fields = "__all__"
 
 
 class UserSerializer(ModelSerializer):
@@ -20,29 +20,29 @@ class UserSerializer(ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'email', 'first_name', 'last_name', 'phone', 'city', 'is_active', 'password', 'payments')
+        fields = ("id", "email", "first_name", "last_name", "phone", "city", "is_active", "password", "payments")
 
     def create(self, validated_data):
         # Удаляем пароль из данных для создания пользователя
-        password = validated_data.pop('password')  # Извлекаем пароль
+        password = validated_data.pop("password")  # Извлекаем пароль
         user = User(**validated_data)  # Создаем объект пользователя без пароля
         user.set_password(password)  # Устанавливаем пароль здесь
         user.save()  # Сохраняем пользователя
         return user
 
     def to_representation(self, instance):
-        """ Переопределяем метод для настройки выводимых данных """
+        """Переопределяем метод для настройки выводимых данных"""
         user_data = super().to_representation(instance)
         # Проверяем, является ли текущий пользователь владельцем профиля
-        if self.context['request'].user != instance:
+        if self.context["request"].user != instance:
             # Удаляем чувствительные данные для сторонних пользователей.
             # Скрываем фамилию, если есть
-            if 'last_name' in user_data:
-                user_data.pop('last_name')
+            if "last_name" in user_data:
+                user_data.pop("last_name")
             # Скрываем историю платежей, если есть
-            if 'payments' in user_data:
-                user_data.pop('payments')
+            if "payments" in user_data:
+                user_data.pop("payments")
             # Скрываем пароль, если есть
-            if 'password' in user_data:
-                user_data.pop('password')
+            if "password" in user_data:
+                user_data.pop("password")
         return user_data

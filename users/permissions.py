@@ -2,15 +2,16 @@ from rest_framework import permissions
 
 
 class IsModer(permissions.BasePermission):
-    """ Проверяет, является ли пользователь модератором. """
-    message = 'Adding customers not allowed.'
+    """Проверяет, является ли пользователь модератором."""
+
+    message = "Adding customers not allowed."
 
     def has_permission(self, request, view):
-        return request.user.groups.filter(name='moders').exists()
+        return request.user.groups.filter(name="moders").exists()
 
 
 class IsOwner(permissions.BasePermission):
-    """ Проверяет, является ли пользователь владельцем объекта. """
+    """Проверяет, является ли пользователь владельцем объекта."""
 
     def has_object_permission(self, request, view, obj):
         if obj.owner == request.user:

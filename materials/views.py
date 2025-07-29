@@ -14,7 +14,7 @@ class CourseViewSet(ModelViewSet):
     pagination_class = CustomPageNumberPagination
 
     def perform_create(self, serializer):
-        course =serializer.save(owner=self.request.user)
+        course = serializer.save(owner=self.request.user)
         course.save()
 
     def get_permissions(self):
@@ -33,7 +33,7 @@ class LessonCreateApiView(CreateAPIView):
     permission_classes = (~IsModer, IsAuthenticated)
 
     def perform_create(self, serializer):
-        lesson =serializer.save(owner=self.request.user)
+        lesson = serializer.save(owner=self.request.user)
         lesson.save()
 
 
