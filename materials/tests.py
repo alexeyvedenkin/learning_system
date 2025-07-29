@@ -1,7 +1,7 @@
 from django.test import TestCase
 from rest_framework import status
 from rest_framework.reverse import reverse
-from rest_framework.test import APIClient
+from rest_framework.test import APIClient, APITestCase
 from users.models import User
 from materials.models import Course, Lesson
 
@@ -74,3 +74,44 @@ class LessonAPITests(TestCase):
         # Проверка, что урок удален
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Lesson.objects.count(), 0)
+
+
+class CourseViewSetTests(APITestCase):
+
+    def setUp(self):
+        # Создаем пользователя для тестирования
+        self.user = User.objects.create_user(username='testuser', password='testpassword')
+        self.client.login(username='testuser', password='testpassword')
+
+    def test_create_course(self):
+        # Тест на создание курса
+        data = {
+            'name': 'Тестовый курс',
+            'description': 'Описание тестового курса'
+        }
+        response = self.client.post('/api/courses/', data)  # Замените на реальный URL вашего эндпоинта
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Course.objects.count(), 1)
+        self.assertEqual(Course.objects.get().name, 'Тестовый курс')
+
+    def test_get_courses(self):
+        # Тест на получение списка курсов
+        Course.objects.create(name='Курс 1', owner=self.user)
+        response = self.client.get('/api/courses/')  # Замените на реальный URL
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+
+    def test_update_course(self):
+        # Тест на обновление курса
+        course = Course.objects.create(name='Курс 1', owner=self.user)
+        data = {'name': 'Обновленный курс'}
+        response = self.client.put(f'/api/courses/{course.id}/', data)  # Замените на реальный URL
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Course.objects.get(id=course.id).name, 'Обновленный курс')
+
+    def test_delete_course(self):
+        # Тест на удаление курса
+        course = Course.objects.create(name='Курс 1', owner=self.user)
+        response = self.client.delete(f'/api/courses/{course.id}/')  # Замените на реальный URL
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Course.objects.count(), 0)

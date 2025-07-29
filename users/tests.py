@@ -84,7 +84,7 @@ class SubscriptionAPITestCase(TestCase):
         # Подписка на курс
         self.client.post(self.url_subscribe, {'course_id': self.course.id})
 
-        # Попробуем подписаться повторно
+        # Пробуем подписаться повторно
         response = self.client.post(self.url_subscribe, {'course_id': self.course.id})
         self.assertEqual(response.status_code, status.HTTP_200_OK)  # Проверка успешного запроса
         self.assertEqual(response.data['message'], 'Подписка уже существует')
