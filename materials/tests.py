@@ -1,7 +1,8 @@
 from django.test import TestCase
 from rest_framework import status
-from rest_framework.reverse import reverse
+from django.urls import reverse
 from rest_framework.test import APIClient, APITestCase
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from materials.models import Course, Lesson
 from users.models import User
@@ -91,7 +92,7 @@ class CourseViewSetTests(APITestCase):
 
     def setUp(self):
         # Создание пользователя и логин
-        self.user = User.objects.create(
+        self.user = User.objects.create_user(
             email='test@example.com', password='testpass'  # Используйте create вместо create_user
         )
         self.user.set_password('testpass')  # Устанавливаем пароль
@@ -99,6 +100,10 @@ class CourseViewSetTests(APITestCase):
 
         self.client = APIClient()
         self.client.login(email='test@example.com', password='testpass')
+
+        # Получаем токен для аутентификации
+        refresh = RefreshToken.for_user(self.user)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
 
         # Создание тестового курса
         self.course = Course.objects.create(
@@ -125,15 +130,16 @@ class CourseViewSetTests(APITestCase):
 
     def test_update_course(self):
         # Тест на обновление курса
-        course = Course.objects.create(name="Курс 1", owner=self.user)
         data = {"name": "Обновленный курс"}
-        response = self.client.put(f"/api/courses/{course.id}/", data)  # Замените на реальный URL
+        # Используем reverse для динамического получения URL
+        url = reverse('materials:course-detail', kwargs={'pk': self.course.id})
+        response = self.client.put(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(Course.objects.get(id=course.id).name, "Обновленный курс")
+        self.assertEqual(Course.objects.get(id=self.course.id).name, "Обновленный курс")
 
     def test_delete_course(self):
         # Тест на удаление курса
-        course = Course.objects.create(name="Курс 1", owner=self.user)
-        response = self.client.delete(f"/api/courses/{course.id}/")  # Замените на реальный URL
+        url = reverse('materials:course-detail', kwargs={'pk': self.course.id})
+        response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Course.objects.count(), 0)
