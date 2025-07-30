@@ -1,5 +1,25 @@
+from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+
+
+class CustomUserManager(BaseUserManager):
+    def create_user(self, email, password=None, **extra_fields):
+        """Создает и возвращает пользователя с email и паролем."""
+        if not email:
+            raise ValueError('Users must have an email address')
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)  # Создаем пользователя, используя email
+        user.set_password(password)  # Устанавливаем пароль
+        user.save(using=self._db)  # Сохраняем пользователя в базе данных
+        return user
+
+    def create_superuser(self, email, password=None, **extra_fields):
+        """Создает и возвращает суперпользователя с email и паролем."""
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        return self.create_user(email, password, **extra_fields)
 
 
 class User(AbstractUser):
@@ -10,6 +30,8 @@ class User(AbstractUser):
     phone = models.CharField(max_length=15, verbose_name="Телефон", blank=True, null=True)
     city = models.CharField(max_length=25, verbose_name="Город", blank=True, null=True)
     avatar = models.ImageField(upload_to="users/avatars", verbose_name="Аватар", blank=True, null=True)
+
+    objects = CustomUserManager()
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
