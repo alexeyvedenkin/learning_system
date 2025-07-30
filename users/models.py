@@ -7,7 +7,7 @@ class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         """Создает и возвращает пользователя с email и паролем."""
         if not email:
-            raise ValueError('Users must have an email address')
+            raise ValueError("Users must have an email address")
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)  # Создаем пользователя, используя email
         user.set_password(password)  # Устанавливаем пароль
@@ -16,8 +16,8 @@ class CustomUserManager(BaseUserManager):
 
     def create_superuser(self, email, password=None, **extra_fields):
         """Создает и возвращает суперпользователя с email и паролем."""
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
 
         return self.create_user(email, password, **extra_fields)
 

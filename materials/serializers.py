@@ -21,7 +21,12 @@ class LessonSerializer(serializers.Serializer):
     )  # Обозначаем, что это поле необязательное
 
     class Meta:
-        fields = ['id', 'title', 'theme', 'description',]
+        fields = [
+            "id",
+            "title",
+            "theme",
+            "description",
+        ]
 
     def create(self, validated_data):
         # Создаем новый экземпляр модели Lesson с проверенными данными
@@ -29,9 +34,9 @@ class LessonSerializer(serializers.Serializer):
 
     def update(self, instance, validated_data):
         # Обновляем поля в существующем объекте
-        instance.title = validated_data.get('title', instance.title)
-        instance.description = validated_data.get('description', instance.description)
-        instance.theme = validated_data.get('theme', instance.theme)
+        instance.title = validated_data.get("title", instance.title)
+        instance.description = validated_data.get("description", instance.description)
+        instance.theme = validated_data.get("theme", instance.theme)
         instance.save()  # Сохраняем изменения
         return instance
 

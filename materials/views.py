@@ -9,7 +9,7 @@ from users.permissions import IsModer, IsOwner
 
 
 class CourseViewSet(ModelViewSet):
-    queryset = Course.objects.all().order_by('name')
+    queryset = Course.objects.all().order_by("name")
     serializer_class = CourseSerializer
     pagination_class = CustomPageNumberPagination
 
@@ -28,7 +28,7 @@ class CourseViewSet(ModelViewSet):
 
 
 class LessonCreateApiView(CreateAPIView):
-    queryset = Lesson.objects.all().order_by('title')
+    queryset = Lesson.objects.all().order_by("title")
     serializer_class = LessonSerializer
     permission_classes = (~IsModer, IsAuthenticated)
 
@@ -38,24 +38,24 @@ class LessonCreateApiView(CreateAPIView):
 
 
 class LessonListApiView(ListAPIView):
-    queryset = Lesson.objects.all().order_by('title')
+    queryset = Lesson.objects.all().order_by("title")
     serializer_class = LessonSerializer
     pagination_class = CustomPageNumberPagination
 
 
 class LessonRetrieveApiView(RetrieveAPIView):
-    queryset = Lesson.objects.all().order_by('title')
+    queryset = Lesson.objects.all().order_by("title")
     serializer_class = LessonSerializer
     permission_classes = (IsAuthenticated, IsModer | IsOwner)
 
 
 class LessonUpdateApiView(UpdateAPIView):
-    queryset = Lesson.objects.all().order_by('title')
+    queryset = Lesson.objects.all().order_by("title")
     serializer_class = LessonSerializer
     permission_classes = (IsAuthenticated, IsModer | IsOwner)
 
 
 class LessonDestroyApiView(DestroyAPIView):
-    queryset = Lesson.objects.all().order_by('title')
+    queryset = Lesson.objects.all().order_by("title")
     serializer_class = LessonSerializer
     permission_classes = (IsAuthenticated, IsOwner | ~IsModer)

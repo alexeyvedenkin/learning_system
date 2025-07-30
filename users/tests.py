@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.test import APITestCase, APIClient
+from rest_framework.test import APIClient, APITestCase
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from materials.models import Course, Lesson
@@ -39,15 +39,13 @@ class UserTests(APITestCase):
 
         url = reverse("users:user-list")  # Получаем URL для списка пользователей
         response = self.client.get(url, format="json")
-        self.assertEqual(
-            response.status_code, status.HTTP_200_OK
-        )  # Проверяем, что доступ закрыт для неавторизованных
+        self.assertEqual(response.status_code, status.HTTP_200_OK)  # Проверяем, что доступ закрыт для неавторизованных
 
     def test_retrieve_user(self):
         """Тестируем получение пользовательских данных"""
         # Получаем токен для аутентификации
         refresh = RefreshToken.for_user(self.test_user)
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')  # Устанавливаем токен в заголовок
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {refresh.access_token}")  # Устанавливаем токен в заголовок
 
         url = reverse("users:user-detail", args=[self.test_user.id])  # URL для получения конкретного пользователя
         self.client.login(email="test@example.com", password="password123")  # Авторизуемся
@@ -58,7 +56,7 @@ class UserTests(APITestCase):
         """Тестируем обновление информации о пользователе"""
         # Получаем токен для аутентификации
         refresh = RefreshToken.for_user(self.test_user)
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')  # Устанавливаем токен в заголовок
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {refresh.access_token}")  # Устанавливаем токен в заголовок
 
         url = reverse("users:user-detail", args=[self.test_user.id])
         self.client.login(email="test@example.com", password="password123")
@@ -70,7 +68,7 @@ class UserTests(APITestCase):
         """Тестируем удаление пользователя"""
         # Получаем токен для аутентификации
         refresh = RefreshToken.for_user(self.test_user)
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')  # Устанавливаем токен в заголовок
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {refresh.access_token}")  # Устанавливаем токен в заголовок
 
         url = reverse("users:user-detail", args=[self.test_user.id])
         self.client.login(email="test@example.com", password="password123")
@@ -82,7 +80,7 @@ class UserTests(APITestCase):
     def test_get_user_list(self):
         """Тест для получения списка пользователей."""
         # Получение URL для списка пользователей
-        url = reverse('users:user-list')  # Используем имя маршрута
+        url = reverse("users:user-list")  # Используем имя маршрута
         response = self.client.get(url)  # Отправляем GET-запрос на URL списком пользователей
         self.assertEqual(response.status_code, status.HTTP_200_OK)  # Проверяем, что статус ответа 200 (OK)
         self.assertGreater(len(response.data), 0)  # Проверяем, что список пользователей не пустой
@@ -93,22 +91,24 @@ class SubscriptionAPITestCase(TestCase):
     def setUp(self):
         # Создание пользователя и логин
         self.user = User.objects.create(
-            email='test@example.com', password='testpass'  # Используйте create вместо create_user
+            email="test@example.com", password="testpass"  # Используйте create вместо create_user
         )
-        self.user.set_password('testpass')  # Устанавливаем пароль
+        self.user.set_password("testpass")  # Устанавливаем пароль
         self.user.save()  # Сохраняем пользователя
 
         self.client = APIClient()
-        self.client.login(email='test@example.com', password='testpass')
+        self.client.login(email="test@example.com", password="testpass")
 
         # Получаем токен для аутентификации
         refresh = RefreshToken.for_user(self.user)
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {refresh.access_token}")
 
         self.course = Course.objects.create(name="Test Course", owner=self.user)
 
         self.url_subscribe = reverse("users:subscription-list")  # URL для создания подписки
-        self.url_unsubscribe = reverse("users:subscription-list",)
+        self.url_unsubscribe = reverse(
+            "users:subscription-list",
+        )
 
     def test_subscribe(self):
         # # Аутентификация пользователя
@@ -143,7 +143,7 @@ class SubscriptionAPITestCase(TestCase):
         # Аутентификация пользователя
         self.client.force_authenticate(user=self.user)
 
-        self.url_unsubscribe = reverse('users:subscription-detail', kwargs={'course_id': 1})
+        self.url_unsubscribe = reverse("users:subscription-detail", kwargs={"course_id": 999})
 
         # Попробуем удалить подписку, когда ее нет
         response = self.client.delete(self.url_unsubscribe)
@@ -163,17 +163,17 @@ class PaymentTests(APITestCase):
     def setUp(self):
         # Создание пользователя и логин
         self.user = User.objects.create(
-            email='test@example.com', password='testpass'  # Используйте create вместо create_user
+            email="test@example.com", password="testpass"  # Используйте create вместо create_user
         )
-        self.user.set_password('testpass')  # Устанавливаем пароль
+        self.user.set_password("testpass")  # Устанавливаем пароль
         self.user.save()  # Сохраняем пользователя
 
         self.client = APIClient()
-        self.client.login(email='test@example.com', password='testpass')
+        self.client.login(email="test@example.com", password="testpass")
 
         # Получаем токен для аутентификации
         refresh = RefreshToken.for_user(self.user)
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {refresh.access_token}")
 
         # Создаем тестовые объекты курса и урока
         self.course = Course.objects.create(name="Тестовый курс", owner=self.user)
