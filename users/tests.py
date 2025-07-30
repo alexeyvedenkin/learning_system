@@ -91,15 +91,28 @@ class UserTests(APITestCase):
 class SubscriptionAPITestCase(TestCase):
 
     def setUp(self):
-        # Создаем тестового пользователя
-        self.user = User.objects.create_user(username="testuser", password="testpass")
-        self.course = Course.objects.create(title="Test Course")
-        self.url_subscribe = reverse("subscription-list")  # URL для создания подписки
-        self.url_unsubscribe = reverse("subscription-detail", kwargs={"course_id": self.course.id})
+        # Создание пользователя и логин
+        self.user = User.objects.create(
+            email='test@example.com', password='testpass'  # Используйте create вместо create_user
+        )
+        self.user.set_password('testpass')  # Устанавливаем пароль
+        self.user.save()  # Сохраняем пользователя
+
+        self.client = APIClient()
+        self.client.login(email='test@example.com', password='testpass')
+
+        # Получаем токен для аутентификации
+        refresh = RefreshToken.for_user(self.user)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
+
+        self.course = Course.objects.create(name="Test Course", owner=self.user)
+
+        self.url_subscribe = reverse("users:subscription-list")  # URL для создания подписки
+        self.url_unsubscribe = reverse("users:subscription-list",)
 
     def test_subscribe(self):
-        # Аутентификация пользователя
-        self.client.force_authenticate(user=self.user)
+        # # Аутентификация пользователя
+        # self.client.force_authenticate(user=self.user)
 
         # Отправляем запрос для подписки
         response = self.client.post(self.url_subscribe, {"course_id": self.course.id})
@@ -107,8 +120,8 @@ class SubscriptionAPITestCase(TestCase):
         self.assertEqual(response.data["message"], "Подписка добавлена")
 
     def test_subscribe_duplicate(self):
-        # Аутентификация пользователя
-        self.client.force_authenticate(user=self.user)
+        # # Аутентификация пользователя
+        # self.client.force_authenticate(user=self.user)
 
         # Подписка на курс
         self.client.post(self.url_subscribe, {"course_id": self.course.id})
@@ -119,19 +132,24 @@ class SubscriptionAPITestCase(TestCase):
         self.assertEqual(response.data["message"], "Подписка уже существует")
 
     def test_unsubscribe(self):
-        # Аутентификация пользователя
-        self.client.force_authenticate(user=self.user)
+        # # Аутентификация пользователя
+        # self.client.force_authenticate(user=self.user)
 
         # Создаем подписку
         self.client.post(self.url_subscribe, {"course_id": self.course.id})
 
+        # Формируем URL для удаления с передачей course_id
+        url_with_course_id = f"{self.url_unsubscribe}{self.course.id}/"
+
         # Запрос на удаление подписки
-        response = self.client.delete(self.url_unsubscribe)
+        response = self.client.delete(url_with_course_id)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)  # Проверка успешного удаления
 
     def test_unsubscribe_not_found(self):
         # Аутентификация пользователя
         self.client.force_authenticate(user=self.user)
+
+        self.url_unsubscribe = reverse('users:subscription-detail', kwargs={'course_id': 1})
 
         # Попробуем удалить подписку, когда ее нет
         response = self.client.delete(self.url_unsubscribe)
@@ -139,10 +157,12 @@ class SubscriptionAPITestCase(TestCase):
 
     def test_unauthenticated_access(self):
         # Проверка доступа без аутентификации
+        self.client.logout()  # Выход из системы для теста аутентификации
         response = self.client.post(self.url_subscribe, {"course_id": self.course.id})
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)  # Доступ запрещен
 
-        response = self.client.delete(self.url_unsubscribe)
+        # Измените url_unsubscribe, чтобы включить course_id
+        response = self.client.delete(self.url_unsubscribe)  # Проверяем URL для существующей подписки
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)  # Доступ запрещен
 
 
