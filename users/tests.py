@@ -158,9 +158,13 @@ class PaymentTests(APITestCase):
         self.client = APIClient()
         self.client.login(email='test@example.com', password='testpass')
 
+        # Получаем токен для аутентификации
+        refresh = RefreshToken.for_user(self.user)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
+
         # Создаем тестовые объекты курса и урока
-        self.course = Course.objects.create(title="Тестовый курс")
-        self.lesson = Lesson.objects.create(title="Тестовый урок", course=self.course)
+        self.course = Course.objects.create(name="Тестовый курс", owner=self.user)
+        self.lesson = Lesson.objects.create(title="Тестовый урок", owner=self.user)
         # Создаем платёж
         self.payment = Payment.objects.create(
             user=self.user, course=self.course, lesson=self.lesson, amount=100.00, payment_method="cash"
@@ -168,7 +172,7 @@ class PaymentTests(APITestCase):
 
     def test_create_payment(self):
         # URL для создания платежа
-        url = reverse("payment-create")
+        url = reverse("users:payments_create")
         data = {
             "user": self.user.id,
             "course": self.course.id,
@@ -185,7 +189,7 @@ class PaymentTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)  # Проверяем, что список доступен
 
     def test_update_payment(self):
-        url = reverse("payment-update", args=[self.payment.id])
+        url = reverse("users:payments_update", args=[self.payment.id])
         data = {
             "amount": 200.00,
         }
@@ -193,6 +197,6 @@ class PaymentTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)  # Проверяем, что обновление прошло успешно
 
     def test_delete_payment(self):
-        url = reverse("payment-destroy", args=[self.payment.id])
+        url = reverse("users:payments_delete", args=[self.payment.id])
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)  # Проверяем, что удаление прошло успешно
