@@ -15,13 +15,25 @@ YOUTUBE_URL_PATTERN = r"https?://(www\.)?(youtube\.com|youtu\.be)/"
 
 class LessonSerializer(serializers.Serializer):
     title = serializers.CharField(max_length=100)
-    content = serializers.CharField()
+    description = serializers.CharField()
     video_url = serializers.URLField(
         validators=[validate_youtube_link], required=False
     )  # Обозначаем, что это поле необязательное
 
     class Meta:
-        fields = ["title", "content", "video_url"]
+        fields = ['id', 'title', 'theme', 'description',]
+
+    def create(self, validated_data):
+        # Создаем новый экземпляр модели Lesson с проверенными данными
+        return Lesson.objects.create(**validated_data)  # Используем валидированные данные для создания урока
+
+    def update(self, instance, validated_data):
+        # Обновляем поля в существующем объекте
+        instance.title = validated_data.get('title', instance.title)
+        instance.description = validated_data.get('description', instance.description)
+        instance.theme = validated_data.get('theme', instance.theme)
+        instance.save()  # Сохраняем изменения
+        return instance
 
     def validate(self, attrs):
         # Проверяем все ссылки в title и content
@@ -45,7 +57,7 @@ class CourseSerializer(ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ["id", "title", "description", "is_subscribed"]
+        fields = ["id", "name", "description", "lesson_count", "lessons"]
 
     def get_lesson_count(self, obj):
         """Метод для получения количества уроков"""

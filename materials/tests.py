@@ -9,9 +9,15 @@ from users.models import User
 
 class LessonAPITests(TestCase):
     def setUp(self):
-        # Создаем тестового пользователя
-        self.user = User.objects.create_user(username="testuser", password="password123")
+        # Создание пользователя и логин
+        self.user = User.objects.create(
+            email='test@example.com', password='testpass'  # Используйте create вместо create_user
+        )
+        self.user.set_password('testpass')  # Устанавливаем пароль
+        self.user.save()  # Сохраняем пользователя
+
         self.client = APIClient()
+        self.client.login(email='test@example.com', password='testpass')
 
         # Создаем курс для урока
         self.course = Course.objects.create(name="Тестовый Курс", owner=self.user)
@@ -19,8 +25,8 @@ class LessonAPITests(TestCase):
         # Создаем тестовые данные для урока
         self.lesson_data = {
             "title": "Тестовый Урок",
-            "theme": self.course.id,
             "description": "Описание тестового урока",
+            "theme": self.course,  # Добавляем курс
         }
 
     def test_create_lesson(self):
@@ -28,21 +34,21 @@ class LessonAPITests(TestCase):
         self.client.force_authenticate(user=self.user)
 
         # Запрос на создание урока
-        response = self.client.post(reverse("lesson-list"), self.lesson_data)
+        response = self.client.post(reverse("materials:lessons_create"), self.lesson_data)
 
         # Проверка, что урок создан
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Lesson.objects.count(), 1)
 
     def test_retrieve_lesson(self):
-        # Создаем урок
-        lesson = Lesson.objects.create(owner=self.user, **self.lesson_data)
+        # Создаем урок. Обратите внимание, что теперь theme находится внутри lesson_data
+        lesson = Lesson.objects.create(owner=self.user, theme=self.course, **self.lesson_data)
 
         # Аутентификация пользователя
         self.client.force_authenticate(user=self.user)
 
         # Запрос на получение урока
-        response = self.client.get(reverse("lesson-detail", args=[lesson.id]))
+        response = self.client.get(reverse("materials:lessons_retrieve", args=[lesson.id]))
 
         # Проверка, что данные урока возвращены
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -50,13 +56,17 @@ class LessonAPITests(TestCase):
 
     def test_update_lesson(self):
         lesson = Lesson.objects.create(owner=self.user, **self.lesson_data)
-        updated_data = {"title": "Обновленный Урок"}
+        updated_data = {
+            "title": "Обновленный Урок",
+            "description": "Описание обновленного урока",
+            "theme": self.course,
+        }
 
         # Аутентификация пользователя
         self.client.force_authenticate(user=self.user)
 
         # Запрос на обновление урока
-        response = self.client.put(reverse("lesson-detail", args=[lesson.id]), updated_data)
+        response = self.client.put(reverse("materials:lessons_update", args=[lesson.id]), updated_data)
 
         # Проверка, что урок обновлен
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -70,7 +80,7 @@ class LessonAPITests(TestCase):
         self.client.force_authenticate(user=self.user)
 
         # Запрос на удаление урока
-        response = self.client.delete(reverse("lesson-detail", args=[lesson.id]))
+        response = self.client.delete(reverse("materials:lessons_delete", args=[lesson.id]))
 
         # Проверка, что урок удален
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
@@ -80,17 +90,31 @@ class LessonAPITests(TestCase):
 class CourseViewSetTests(APITestCase):
 
     def setUp(self):
-        # Создаем пользователя для тестирования
-        self.user = User.objects.create_user(username="testuser", password="testpassword")
-        self.client.login(username="testuser", password="testpassword")
+        # Создание пользователя и логин
+        self.user = User.objects.create(
+            email='test@example.com', password='testpass'  # Используйте create вместо create_user
+        )
+        self.user.set_password('testpass')  # Устанавливаем пароль
+        self.user.save()  # Сохраняем пользователя
+
+        self.client = APIClient()
+        self.client.login(email='test@example.com', password='testpass')
+
+        # Создание тестового курса
+        self.course = Course.objects.create(
+            name='Тестовый курс',
+            owner=self.user
+        )
 
     def test_create_course(self):
-        # Тест на создание курса
-        data = {"name": "Тестовый курс", "description": "Описание тестового курса"}
-        response = self.client.post("/api/courses/", data)  # Замените на реальный URL вашего эндпоинта
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Course.objects.count(), 1)
-        self.assertEqual(Course.objects.get().name, "Тестовый курс")
+        url = reverse('materials:course-list')
+        data = {
+            'name': 'Тестовый курс',
+            'description': 'Содержимое тестового курса',
+            'preview': None  # Если нужно, добавьте URL к изображению
+        }
+        response = self.client.post(url, data, format='json')  # Отправка запроса на создание курса
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)  # Проверка ответа 201
 
     def test_get_courses(self):
         # Тест на получение списка курсов

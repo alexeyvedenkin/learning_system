@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, APIClient
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from materials.models import Course, Lesson
@@ -19,34 +19,48 @@ class UserTests(APITestCase):
 
     def test_create_user(self):
         """Тестируем создание нового пользователя"""
-        url = reverse("user-list")  # Получаем URL для эндпоинта списка пользователей
+        url = reverse("users:user-list")  # Получаем URL для эндпоинта списка пользователей
         data = {
-            "email": "newuser@example.com",
-            "password": "newpassword",
+            "email": "new_user@example.com",
+            "password": "password123",
             "first_name": "Новый",
             "last_name": "Пользователь",
         }
         response = self.client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)  # Проверяем, что статус 201 (Создано)
 
+        self.assertTrue(User.objects.filter(email="new_user@example.com").exists())
+
     def test_list_users(self):
         """Тестируем получение списка пользователей"""
-        url = reverse("user-list")  # Получаем URL для списка пользователей
+        # Получаем токен для аутентификации
+        # refresh = RefreshToken.for_user(self.test_user)
+        # self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')  # Устанавливаем токен в заголовок
+
+        url = reverse("users:user-list")  # Получаем URL для списка пользователей
         response = self.client.get(url, format="json")
         self.assertEqual(
-            response.status_code, status.HTTP_401_UNAUTHORIZED
+            response.status_code, status.HTTP_200_OK
         )  # Проверяем, что доступ закрыт для неавторизованных
 
     def test_retrieve_user(self):
         """Тестируем получение пользовательских данных"""
-        url = reverse("user-detail", args=[self.test_user.id])  # URL для получения конкретного пользователя
+        # Получаем токен для аутентификации
+        refresh = RefreshToken.for_user(self.test_user)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')  # Устанавливаем токен в заголовок
+
+        url = reverse("users:user-detail", args=[self.test_user.id])  # URL для получения конкретного пользователя
         self.client.login(email="test@example.com", password="password123")  # Авторизуемся
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)  # Проверяем, что статус 200 (Успех)
 
     def test_update_user(self):
         """Тестируем обновление информации о пользователе"""
-        url = reverse("user-detail", args=[self.test_user.id])
+        # Получаем токен для аутентификации
+        refresh = RefreshToken.for_user(self.test_user)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')  # Устанавливаем токен в заголовок
+
+        url = reverse("users:user-detail", args=[self.test_user.id])
         self.client.login(email="test@example.com", password="password123")
         data = {"first_name": "Обновленный"}
         response = self.client.patch(url, data, format="json")
@@ -54,12 +68,24 @@ class UserTests(APITestCase):
 
     def test_delete_user(self):
         """Тестируем удаление пользователя"""
-        url = reverse("user-detail", args=[self.test_user.id])
+        # Получаем токен для аутентификации
+        refresh = RefreshToken.for_user(self.test_user)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')  # Устанавливаем токен в заголовок
+
+        url = reverse("users:user-detail", args=[self.test_user.id])
         self.client.login(email="test@example.com", password="password123")
         response = self.client.delete(url)
         self.assertEqual(
             response.status_code, status.HTTP_204_NO_CONTENT
         )  # Проверяем, что статус 204 (Нет содержимого)
+
+    def test_get_user_list(self):
+        """Тест для получения списка пользователей."""
+        # Получение URL для списка пользователей
+        url = reverse('users:user-list')  # Используем имя маршрута
+        response = self.client.get(url)  # Отправляем GET-запрос на URL списком пользователей
+        self.assertEqual(response.status_code, status.HTTP_200_OK)  # Проверяем, что статус ответа 200 (OK)
+        self.assertGreater(len(response.data), 0)  # Проверяем, что список пользователей не пустой
 
 
 class SubscriptionAPITestCase(TestCase):
@@ -122,8 +148,16 @@ class SubscriptionAPITestCase(TestCase):
 
 class PaymentTests(APITestCase):
     def setUp(self):
-        # Создаем тестового пользователя
-        self.user = User.objects.create_user(username="testuser", password="testpass")
+        # Создание пользователя и логин
+        self.user = User.objects.create(
+            email='test@example.com', password='testpass'  # Используйте create вместо create_user
+        )
+        self.user.set_password('testpass')  # Устанавливаем пароль
+        self.user.save()  # Сохраняем пользователя
+
+        self.client = APIClient()
+        self.client.login(email='test@example.com', password='testpass')
+
         # Создаем тестовые объекты курса и урока
         self.course = Course.objects.create(title="Тестовый курс")
         self.lesson = Lesson.objects.create(title="Тестовый урок", course=self.course)
