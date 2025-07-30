@@ -120,9 +120,6 @@ class SubscriptionAPITestCase(TestCase):
         self.assertEqual(response.data["message"], "Подписка добавлена")
 
     def test_subscribe_duplicate(self):
-        # # Аутентификация пользователя
-        # self.client.force_authenticate(user=self.user)
-
         # Подписка на курс
         self.client.post(self.url_subscribe, {"course_id": self.course.id})
 
@@ -132,9 +129,6 @@ class SubscriptionAPITestCase(TestCase):
         self.assertEqual(response.data["message"], "Подписка уже существует")
 
     def test_unsubscribe(self):
-        # # Аутентификация пользователя
-        # self.client.force_authenticate(user=self.user)
-
         # Создаем подписку
         self.client.post(self.url_subscribe, {"course_id": self.course.id})
 
@@ -161,7 +155,6 @@ class SubscriptionAPITestCase(TestCase):
         response = self.client.post(self.url_subscribe, {"course_id": self.course.id})
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)  # Доступ запрещен
 
-        # Измените url_unsubscribe, чтобы включить course_id
         response = self.client.delete(self.url_unsubscribe)  # Проверяем URL для существующей подписки
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)  # Доступ запрещен
 
@@ -204,7 +197,7 @@ class PaymentTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)  # Проверяем, что создание прошло успешно
 
     def test_list_payments(self):
-        url = reverse("payment-list")
+        url = reverse("users:payments_list")
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)  # Проверяем, что список доступен
 
