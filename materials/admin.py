@@ -20,6 +20,6 @@ class LessonAdmin(admin.ModelAdmin):
     #     print(type(obj.theme[0].name))
     #     return Course.objects.filter(lessons__id=obj.id).name
 
-    @admin.display(description='Курс', ordering='theme__name')
+    @admin.display(description="Курс", ordering="theme__name")
     def get_theme(self, obj):
         return obj.theme.name

@@ -29,15 +29,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "preview",
-                    models.ImageField(
-                        blank=True, null=True, upload_to="courses/previews"
-                    ),
+                    models.ImageField(blank=True, null=True, upload_to="courses/previews"),
                 ),
                 (
                     "description",
-                    models.TextField(
-                        blank=True, null=True, verbose_name="Содержание курса"
-                    ),
+                    models.TextField(blank=True, null=True, verbose_name="Содержание курса"),
                 ),
             ],
             options={
@@ -63,15 +59,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "description",
-                    models.TextField(
-                        blank=True, null=True, verbose_name="Содержание урока"
-                    ),
+                    models.TextField(blank=True, null=True, verbose_name="Содержание урока"),
                 ),
                 (
                     "preview",
-                    models.ImageField(
-                        blank=True, null=True, upload_to="lessons/previews"
-                    ),
+                    models.ImageField(blank=True, null=True, upload_to="lessons/previews"),
                 ),
                 (
                     "video_file",

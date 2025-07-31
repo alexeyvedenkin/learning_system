@@ -3,16 +3,18 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
 from materials.models import Course, Lesson
+from materials.paginators import CustomPageNumberPagination
 from materials.serializers import CourseSerializer, LessonSerializer
 from users.permissions import IsModer, IsOwner
 
 
 class CourseViewSet(ModelViewSet):
-    queryset = Course.objects.all()
+    queryset = Course.objects.all().order_by("name")
     serializer_class = CourseSerializer
+    pagination_class = CustomPageNumberPagination
 
     def perform_create(self, serializer):
-        course =serializer.save(owner=self.request.user)
+        course = serializer.save(owner=self.request.user)
         course.save()
 
     def get_permissions(self):
@@ -26,31 +28,34 @@ class CourseViewSet(ModelViewSet):
 
 
 class LessonCreateApiView(CreateAPIView):
-    queryset = Lesson.objects.all()
+    queryset = Lesson.objects.all().order_by("title")
     serializer_class = LessonSerializer
     permission_classes = (~IsModer, IsAuthenticated)
 
     def perform_create(self, serializer):
-        lesson =serializer.save(owner=self.request.user)
+        lesson = serializer.save(owner=self.request.user)
         lesson.save()
 
 
 class LessonListApiView(ListAPIView):
-    queryset = Lesson.objects.all()
+    queryset = Lesson.objects.all().order_by("title")
     serializer_class = LessonSerializer
+    pagination_class = CustomPageNumberPagination
 
 
 class LessonRetrieveApiView(RetrieveAPIView):
-    queryset = Lesson.objects.all()
+    queryset = Lesson.objects.all().order_by("title")
     serializer_class = LessonSerializer
     permission_classes = (IsAuthenticated, IsModer | IsOwner)
+
 
 class LessonUpdateApiView(UpdateAPIView):
-    queryset = Lesson.objects.all()
+    queryset = Lesson.objects.all().order_by("title")
     serializer_class = LessonSerializer
     permission_classes = (IsAuthenticated, IsModer | IsOwner)
 
+
 class LessonDestroyApiView(DestroyAPIView):
-    queryset = Lesson.objects.all()
+    queryset = Lesson.objects.all().order_by("title")
     serializer_class = LessonSerializer
     permission_classes = (IsAuthenticated, IsOwner | ~IsModer)
