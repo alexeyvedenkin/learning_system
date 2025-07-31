@@ -1,4 +1,4 @@
-from django.http import JsonResponse
+import stripe
 from django_filters.rest_framework import DjangoFilterBackend, filters
 from rest_framework import status
 from rest_framework.filters import OrderingFilter
@@ -9,10 +9,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
+from config import settings
 from materials.models import Course
 from users.models import Payment, Subscription, User
 from users.serializers import PaymentSerializer, UserSerializer
 
+
+stripe.api_key = settings.STRIPE_API_KEY
 
 class UserViewSet(ModelViewSet):
     queryset = User.objects.all()
@@ -72,6 +75,40 @@ class PaymentUpdateApiView(UpdateAPIView):
 class PaymentDestroyApiView(DestroyAPIView):
     queryset = Payment.objects.all().order_by("payment_date")
     serializer_class = PaymentSerializer
+
+
+class CreatePaymentView(CreateAPIView):
+    queryset = Payment.objects.all()
+    # Используйте свой сериалайзер оплаты, который вы создадите
+    serializer_class = PaymentSerializer
+
+    def post(self, request, *args, **kwargs):
+        course_id = request.data['course_id']
+        # Получаем стоимость курса
+        course = Course.objects.get(id=course_id)
+        amount = int(course.price * 100)  # Stripe принимает сумму в центах
+
+        # Создаем платеж в Stripe
+        try:
+            charge = stripe.Charge.create(
+                amount=amount,
+                currency="usd",  # Валюта
+                description=f"Оплата курса: {course.name}",
+                source=request.data['stripeToken']  # Токен, который генерируется на клиенте
+            )
+
+            # Создаем запись о платеже
+            payment = Payment.objects.create(
+                user=request.user,
+                course=course,
+                amount=course.price,
+                payment_method="transfer"  # Или другой способ в зависимости от контекста
+            )
+
+            return Response({'status': 'Payment successful', 'payment_id': payment.id}, status=status.HTTP_201_CREATED)
+
+        except stripe.error.StripeError as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class SubscriptionAPIView(APIView):
