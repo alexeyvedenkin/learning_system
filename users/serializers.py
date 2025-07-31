@@ -29,3 +29,20 @@ class UserSerializer(ModelSerializer):
         user.set_password(password)  # Устанавливаем пароль здесь
         user.save()  # Сохраняем пользователя
         return user
+
+    def to_representation(self, instance):
+        """ Переопределяем метод для настройки выводимых данных """
+        user_data = super().to_representation(instance)
+        # Проверяем, является ли текущий пользователь владельцем профиля
+        if self.context['request'].user != instance:
+            # Удаляем чувствительные данные для сторонних пользователей.
+            # Скрываем фамилию, если есть
+            if 'last_name' in user_data:
+                user_data.pop('last_name')
+            # Скрываем историю платежей, если есть
+            if 'payments' in user_data:
+                user_data.pop('payments')
+            # Скрываем пароль, если есть
+            if 'password' in user_data:
+                user_data.pop('password')
+        return user_data

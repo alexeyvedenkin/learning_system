@@ -3,6 +3,7 @@ from rest_framework.filters import OrderingFilter
 
 from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from users.models import User, Payment
@@ -22,6 +23,12 @@ class UserViewSet(ModelViewSet):
 
     def get_queryset(self):
         return super().get_queryset().prefetch_related('payments')
+
+    def retrieve(self, request, *args, **kwargs):
+        """ Переопределяем метод retrieve для проверки доступа """
+        user = self.get_object()
+        serializer = self.get_serializer(user)
+        return Response(serializer.data)  # Используем сериализатор для возврата данных
 
 
 class PaymentCreateApiView(CreateAPIView):
