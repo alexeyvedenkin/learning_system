@@ -61,10 +61,29 @@ class Payment(models.Model):
         ("transfer", "Перевод на счёт"),
     ]
     payment_method = models.CharField(max_length=10, choices=PAYMENT_METHODS, verbose_name="Способ оплаты")
+    course_price = models.ForeignKey(
+        "materials.Course",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name = "payments_course_price"
+    )
+    lesson_price = models.ForeignKey(
+        "materials.Lesson",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="payments_lesson_price"
+    )
+    session_id = models.CharField(max_length=255, blank=True, null=True, verbose_name="ID платежной сессии")
+    link = models.URLField(max_length=400, blank=True, null=True, verbose_name="URL платежной сессии")
 
     class Meta:
         verbose_name = "Платеж"
         verbose_name_plural = "Платежи"
+
+    def __str__(self):
+        return f"{self.User.last_name}, {self.payment_date}, {self.amount} "
 
 
 class Subscription(models.Model):
