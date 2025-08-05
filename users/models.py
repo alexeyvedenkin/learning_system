@@ -50,9 +50,19 @@ class Payment(models.Model):
     # Дата оплаты
     payment_date = models.DateTimeField(auto_now_add=True, verbose_name="Дата оплаты")
     # Связь с курсом
-    course = models.ForeignKey("materials.Course", on_delete=models.CASCADE, verbose_name="Оплаченный курс")
+    course = models.ForeignKey(
+        "materials.Course",
+        on_delete=models.CASCADE,
+        blank=True, null=True,
+        verbose_name="Оплаченный курс"
+    )
     # Связь с уроком
-    lesson = models.ForeignKey("materials.Lesson", on_delete=models.CASCADE, verbose_name="Оплаченный урок")
+    lesson = models.ForeignKey(
+        "materials.Lesson",
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        verbose_name="Оплаченный урок")
     # Сумма оплаты
     amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Сумма оплаты")
     # Способ оплаты: наличные или перевод
