@@ -77,15 +77,26 @@ class PaymentDestroyApiView(DestroyAPIView):
     serializer_class = PaymentSerializer
 
 
-class CreatePaymentView(CreateAPIView):
+class CreatePaymentAPIView(CreateAPIView):
     queryset = Payment.objects.all()
-    # Используйте свой сериалайзер оплаты, который вы создадите
     serializer_class = PaymentSerializer
+
+    def perform_create(self, serializer):
+        payment = serializer.save(user=self.request.user)
+
+
+        pass
 
     def post(self, request, *args, **kwargs):
         course_id = request.data['course_id']
+
         # Получаем стоимость курса
-        course = Course.objects.get(id=course_id)
+        try:
+            course = Course.objects.get(id=course_id)
+        except Course.DoesNotExist:
+            return Response({'error': 'Курс не найден'},
+                            status=status.HTTP_404_NOT_FOUND)  # Обработка случая, когда курс не найден
+
         amount = int(course.price * 100)  # Stripe принимает сумму в центах
 
         # Создаем платеж в Stripe
@@ -102,7 +113,7 @@ class CreatePaymentView(CreateAPIView):
                 user=request.user,
                 course=course,
                 amount=course.price,
-                payment_method="transfer"  # Или другой способ в зависимости от контекста
+                payment_method="transfer"
             )
 
             return Response({'status': 'Payment successful', 'payment_id': payment.id}, status=status.HTTP_201_CREATED)

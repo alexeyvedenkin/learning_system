@@ -5,7 +5,6 @@ from materials.models import Course, Lesson
 from .models import Payment, User
 
 
-
 stripe.api_key = settings.STRIPE_API_KEY
 
 
