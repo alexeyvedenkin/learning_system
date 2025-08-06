@@ -10,10 +10,10 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
 from config import settings
-from materials.models import Course
+from materials.models import Course, Lesson
 from users.models import Payment, Subscription, User
 from users.serializers import PaymentSerializer, UserSerializer
-
+from users.services import create_payment_session, create_stripe_price, create_stripe_price, create_product
 
 stripe.api_key = settings.STRIPE_API_KEY
 
@@ -41,6 +41,20 @@ class UserViewSet(ModelViewSet):
 class PaymentCreateApiView(CreateAPIView):
     queryset = Payment.objects.all().order_by("payment_date")
     serializer_class = PaymentSerializer
+
+    def perform_create(self, serializer):
+        # Сохранение платежа
+        payment = serializer.save(user=self.request.user)
+        amount = payment.amount
+
+        # Создаем продукт, а затем создаем цену для этого продукта
+        product_id = create_product("course")  # Создаем продукт типа "course"
+        price = create_stripe_price(product_id, amount)  # Теперь передаем оба аргумента
+
+        session_id, payment_link = create_payment_session(price)
+        payment.session_id = session_id
+        payment.link = payment_link
+        payment.save()
 
 
 class PaymentListApiView(ListAPIView):
@@ -75,51 +89,6 @@ class PaymentUpdateApiView(UpdateAPIView):
 class PaymentDestroyApiView(DestroyAPIView):
     queryset = Payment.objects.all().order_by("payment_date")
     serializer_class = PaymentSerializer
-
-
-class CreatePaymentAPIView(CreateAPIView):
-    queryset = Payment.objects.all()
-    serializer_class = PaymentSerializer
-
-    def perform_create(self, serializer):
-        payment = serializer.save(user=self.request.user)
-
-
-        pass
-
-    def post(self, request, *args, **kwargs):
-        course_id = request.data['course_id']
-
-        # Получаем стоимость курса
-        try:
-            course = Course.objects.get(id=course_id)
-        except Course.DoesNotExist:
-            return Response({'error': 'Курс не найден'},
-                            status=status.HTTP_404_NOT_FOUND)  # Обработка случая, когда курс не найден
-
-        amount = int(course.price * 100)  # Stripe принимает сумму в центах
-
-        # Создаем платеж в Stripe
-        try:
-            charge = stripe.Charge.create(
-                amount=amount,
-                currency="usd",  # Валюта
-                description=f"Оплата курса: {course.name}",
-                source=request.data['stripeToken']  # Токен, который генерируется на клиенте
-            )
-
-            # Создаем запись о платеже
-            payment = Payment.objects.create(
-                user=request.user,
-                course=course,
-                amount=course.price,
-                payment_method="transfer"
-            )
-
-            return Response({'status': 'Payment successful', 'payment_id': payment.id}, status=status.HTTP_201_CREATED)
-
-        except stripe.error.StripeError as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class SubscriptionAPIView(APIView):
