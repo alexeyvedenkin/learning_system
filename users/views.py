@@ -1,5 +1,5 @@
 import stripe
-from django_filters.rest_framework import DjangoFilterBackend, filters
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.filters import OrderingFilter
 from rest_framework.generics import (CreateAPIView, DestroyAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView,
@@ -10,12 +10,13 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
 from config import settings
-from materials.models import Course, Lesson
+from materials.models import Course
 from users.models import Payment, Subscription, User
 from users.serializers import PaymentSerializer, UserSerializer
-from users.services import create_payment_session, create_stripe_price, create_stripe_price, create_product
+from users.services import create_payment_session, create_product, create_stripe_price
 
 stripe.api_key = settings.STRIPE_API_KEY
+
 
 class UserViewSet(ModelViewSet):
     queryset = User.objects.all()

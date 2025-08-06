@@ -6,7 +6,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from materials.models import Course, Lesson
 
-from .models import Payment, Subscription, User
+from .models import Payment, User
 
 
 class UserTests(APITestCase):
@@ -34,9 +34,6 @@ class UserTests(APITestCase):
     def test_list_users(self):
         """Тестируем получение списка пользователей"""
         # Получаем токен для аутентификации
-        # refresh = RefreshToken.for_user(self.test_user)
-        # self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')  # Устанавливаем токен в заголовок
-
         url = reverse("users:user-list")  # Получаем URL для списка пользователей
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)  # Проверяем, что доступ закрыт для неавторизованных

@@ -26,7 +26,6 @@ INSTALLED_APPS = [
     "django_extensions",
     "drf_yasg",
     "stripe",
-
     "users",
     "materials",
 ]

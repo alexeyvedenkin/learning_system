@@ -51,18 +51,12 @@ class Payment(models.Model):
     payment_date = models.DateTimeField(auto_now_add=True, verbose_name="Дата оплаты")
     # Связь с курсом
     course = models.ForeignKey(
-        "materials.Course",
-        on_delete=models.CASCADE,
-        blank=True, null=True,
-        verbose_name="Оплаченный курс"
+        "materials.Course", on_delete=models.CASCADE, blank=True, null=True, verbose_name="Оплаченный курс"
     )
     # Связь с уроком
     lesson = models.ForeignKey(
-        "materials.Lesson",
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True,
-        verbose_name="Оплаченный урок")
+        "materials.Lesson", on_delete=models.CASCADE, blank=True, null=True, verbose_name="Оплаченный урок"
+    )
     # Сумма оплаты
     amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Сумма оплаты")
     # Способ оплаты: наличные или перевод
@@ -72,18 +66,10 @@ class Payment(models.Model):
     ]
     payment_method = models.CharField(max_length=10, choices=PAYMENT_METHODS, verbose_name="Способ оплаты")
     course_price = models.ForeignKey(
-        "materials.Course",
-        on_delete=models.SET_NULL,
-        blank=True,
-        null=True,
-        related_name = "payments_course_price"
+        "materials.Course", on_delete=models.SET_NULL, blank=True, null=True, related_name="payments_course_price"
     )
     lesson_price = models.ForeignKey(
-        "materials.Lesson",
-        on_delete=models.SET_NULL,
-        blank=True,
-        null=True,
-        related_name="payments_lesson_price"
+        "materials.Lesson", on_delete=models.SET_NULL, blank=True, null=True, related_name="payments_lesson_price"
     )
     session_id = models.CharField(max_length=255, blank=True, null=True, verbose_name="ID платежной сессии")
     link = models.URLField(max_length=400, blank=True, null=True, verbose_name="URL платежной сессии")
