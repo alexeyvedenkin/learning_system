@@ -1,5 +1,5 @@
-from django.http import JsonResponse
-from django_filters.rest_framework import DjangoFilterBackend, filters
+import stripe
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.filters import OrderingFilter
 from rest_framework.generics import (CreateAPIView, DestroyAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView,
@@ -9,9 +9,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
+from config import settings
 from materials.models import Course
 from users.models import Payment, Subscription, User
 from users.serializers import PaymentSerializer, UserSerializer
+from users.services import create_payment_session, create_product, create_stripe_price
+
+stripe.api_key = settings.STRIPE_API_KEY
 
 
 class UserViewSet(ModelViewSet):
@@ -38,6 +42,20 @@ class UserViewSet(ModelViewSet):
 class PaymentCreateApiView(CreateAPIView):
     queryset = Payment.objects.all().order_by("payment_date")
     serializer_class = PaymentSerializer
+
+    def perform_create(self, serializer):
+        # Сохранение платежа
+        payment = serializer.save(user=self.request.user)
+        amount = payment.amount
+
+        # Создаем продукт, а затем создаем цену для этого продукта
+        product_id = create_product("course")  # Создаем продукт типа "course"
+        price = create_stripe_price(product_id, amount)  # Теперь передаем оба аргумента
+
+        session_id, payment_link = create_payment_session(price)
+        payment.session_id = session_id
+        payment.link = payment_link
+        payment.save()
 
 
 class PaymentListApiView(ListAPIView):

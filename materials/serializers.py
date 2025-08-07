@@ -26,6 +26,7 @@ class LessonSerializer(serializers.Serializer):
             "title",
             "theme",
             "description",
+            "price",
         ]
 
     def create(self, validated_data):
@@ -62,7 +63,7 @@ class CourseSerializer(ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ["id", "name", "description", "lesson_count", "lessons"]
+        fields = ["id", "name", "description", "lesson_count", "lessons", "price"]
 
     def get_lesson_count(self, obj):
         """Метод для получения количества уроков"""

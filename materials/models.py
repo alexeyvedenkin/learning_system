@@ -8,6 +8,7 @@ class Course(models.Model):
     preview = models.ImageField(upload_to="courses/previews", blank=True, null=True)
     description = models.TextField(verbose_name="Содержание курса", blank=True, null=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Автор курса")
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена курса")
 
     class Meta:
         verbose_name = "Курс"
@@ -26,6 +27,7 @@ class Lesson(models.Model):
     description = models.TextField(verbose_name="Содержание урока", blank=True, null=True)
     preview = models.ImageField(upload_to="lessons/previews", blank=True, null=True)
     video_file = models.FileField(upload_to="lessons/videos", blank=True, null=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена урока")
 
     class Meta:
         verbose_name = "Урок"
