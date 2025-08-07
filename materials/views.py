@@ -1,5 +1,8 @@
-from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView
+from rest_framework.decorators import action
+from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView, \
+    get_object_or_404
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from materials.models import Course, Lesson
@@ -25,6 +28,12 @@ class CourseViewSet(ModelViewSet):
         else:
             self.permission_classes = (IsModer | IsOwner,)
         return super().get_permissions()
+
+    @action(detail=True, methods=["post"])  # Исправлены скобки на список
+    def course_update(self, request, pk=None):  # Добавлен аргумент request и pk=None
+        course = get_object_or_404(Course, pk=pk)
+        # Здесь вы можете добавлять логику обновления курса
+        return Response({'status': 'курс обновлён'})  # Пример ответа
 
 
 class LessonCreateApiView(CreateAPIView):
