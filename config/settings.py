@@ -2,6 +2,7 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
+from celery.schedules import crontab
 from dotenv import load_dotenv
 
 load_dotenv(override=True)
@@ -156,3 +157,11 @@ CELERY_TASK_TRACK_STARTED = True
 
 # Максимальное время на выполнение задачи
 CELERY_TASK_TIME_LIMIT = 30 * 60
+
+# Установка расписания для деактивации пользователей
+CELERY_BEAT_SCHEDULE = {
+    'deactivate-inactive-users-every-month': {
+        'task': 'users.tasks.deactivate_inactive_users',
+        'schedule': crontab(day_of_week='*', hour='0', minute='0'),  # Каждую ночь в полночь
+    },
+}
