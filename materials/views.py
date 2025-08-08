@@ -8,8 +8,10 @@ from rest_framework.viewsets import ModelViewSet
 from materials.models import Course, Lesson
 from materials.paginators import CustomPageNumberPagination
 from materials.serializers import CourseSerializer, LessonSerializer
+from users.models import Subscription
 from users.permissions import IsModer, IsOwner
 
+from materials.tasks import send_course_update_email, send_lesson_update_email
 
 class CourseViewSet(ModelViewSet):
     queryset = Course.objects.all().order_by("name")
@@ -29,11 +31,12 @@ class CourseViewSet(ModelViewSet):
             self.permission_classes = (IsModer | IsOwner,)
         return super().get_permissions()
 
-    @action(detail=True, methods=["post"])  # Исправлены скобки на список
-    def course_update(self, request, pk=None):  # Добавлен аргумент request и pk=None
-        course = get_object_or_404(Course, pk=pk)
-        # Здесь вы можете добавлять логику обновления курса
-        return Response({'status': 'курс обновлён'})  # Пример ответа
+    def perform_update(self, serializer):
+        course = serializer.save()  # Сохраняем курс
+        # Получаем пользователей, подписанных на данный курс
+        subscribers = Subscription.objects.filter(course=course).values_list('user__email', flat=True)
+        # Вызываем асинхронную задачу для отправки письма
+        send_course_update_email.delay(list(subscribers), course.name)  # Асинхронный вызов задачи
 
 
 class LessonCreateApiView(CreateAPIView):
@@ -62,6 +65,13 @@ class LessonUpdateApiView(UpdateAPIView):
     queryset = Lesson.objects.all().order_by("title")
     serializer_class = LessonSerializer
     permission_classes = (IsAuthenticated, IsModer | IsOwner)
+
+    def perform_update(self, serializer):
+        lesson = serializer.save()  # Сохраняем урок
+        # Получаем пользователей, подписанных на данный урок
+        subscribers = Subscription.objects.filter(lesson=lesson).values_list('user__email', flat=True)
+        # Вызываем асинхронную задачу для отправки письма
+        send_course_update_email.delay(list(subscribers), lesson.title)
 
 
 class LessonDestroyApiView(DestroyAPIView):
