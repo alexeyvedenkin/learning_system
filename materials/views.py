@@ -1,3 +1,6 @@
+from datetime import timedelta
+
+from django.utils import timezone
 from rest_framework.decorators import action
 from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView, \
     get_object_or_404
@@ -31,12 +34,19 @@ class CourseViewSet(ModelViewSet):
             self.permission_classes = (IsModer | IsOwner,)
         return super().get_permissions()
 
-    def perform_update(self, serializer):
-        course = serializer.save()  # Сохраняем курс
-        # Получаем пользователей, подписанных на данный курс
-        subscribers = Subscription.objects.filter(course=course).values_list('user__email', flat=True)
-        # Вызываем асинхронную задачу для отправки письма
-        send_course_update_email.delay(list(subscribers), course.name)  # Асинхронный вызов задачи
+    def update_course(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        # Проверяем, прошло ли более 4 часов с последнего обновления курса
+        if timezone.now() - instance.last_update > timedelta(hours=4):
+            subscriptions = Subscription.objects.filter(course=instance)
+            for subscription in subscriptions:
+                send_course_update_email.delay(subscription.user.email, instance.name)  # Отправка email
+
+        return Response(serializer.data)
 
 
 class LessonCreateApiView(CreateAPIView):
@@ -66,12 +76,13 @@ class LessonUpdateApiView(UpdateAPIView):
     serializer_class = LessonSerializer
     permission_classes = (IsAuthenticated, IsModer | IsOwner)
 
-    def perform_update(self, serializer):
-        lesson = serializer.save()  # Сохраняем урок
-        # Получаем пользователей, подписанных на данный урок
-        subscribers = Subscription.objects.filter(lesson=lesson).values_list('user__email', flat=True)
-        # Вызываем асинхронную задачу для отправки письма
-        send_course_update_email.delay(list(subscribers), lesson.title)
+    def update_lesson(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        return Response(serializer.data)
 
 
 class LessonDestroyApiView(DestroyAPIView):
