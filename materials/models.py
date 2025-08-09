@@ -1,3 +1,5 @@
+from datetime import timezone
+
 from django.db import models
 
 from users.models import User
@@ -9,6 +11,12 @@ class Course(models.Model):
     description = models.TextField(verbose_name="Содержание курса", blank=True, null=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Автор курса")
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена курса")
+    last_update = models.DateTimeField(auto_now=True)  # Автоматически обновляем поле при изменении объекта
+
+    def save(self, *args, **kwargs):
+        if not self.last_update:  # Если это новый объект (last_update пустое)
+            self.last_update = timezone.now()  # Устанавливаем текущее время
+        super().save(*args, **kwargs)  # Вызываем метод родителя для сохранения
 
     class Meta:
         verbose_name = "Курс"
@@ -28,6 +36,12 @@ class Lesson(models.Model):
     preview = models.ImageField(upload_to="lessons/previews", blank=True, null=True)
     video_file = models.FileField(upload_to="lessons/videos", blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена урока")
+    last_update = models.DateTimeField(auto_now=True)  # Автоматически обновляем поле при изменении объекта
+
+    def save(self, *args, **kwargs):
+        if not self.last_update:  # Если это новый объект (last_update пустое)
+            self.last_update = timezone.now()  # Устанавливаем текущее время
+        super().save(*args, **kwargs)  # Вызываем метод родителя для сохранения
 
     class Meta:
         verbose_name = "Урок"

@@ -8,8 +8,7 @@ class PaymentSerializer(ModelSerializer):
 
     class Meta:
         model = Payment
-        exclude = ['user']
-
+        exclude = ["user"]
 
 class UserSerializer(ModelSerializer):
 
