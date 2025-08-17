@@ -2,16 +2,17 @@
 FROM python:3.12
 
 # Устанавливаем рабочую директорию в контейнере
-WORKDIR /app
+WORKDIR /code
 
 # Копируем файлы для Poetry
-COPY README.md ./
 COPY pyproject.toml poetry.lock ./
 
 # Устанавливаем Poetry
 RUN pip install poetry
 RUN poetry config virtualenvs.create false
-RUN poetry install --no-interaction --no-ansi --no-root
+
+# Установка зависимостей
+RUN poetry install --no-root
 
 # Копируем остальные файлы проекта в контейнер
 COPY . .
