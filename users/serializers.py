@@ -10,6 +10,7 @@ class PaymentSerializer(ModelSerializer):
         model = Payment
         exclude = ["user"]
 
+
 class UserSerializer(ModelSerializer):
 
     # Добавляем поле password, чтобы оно стало доступным при создании пользователя

@@ -1,9 +1,7 @@
 from datetime import timedelta
 
 from django.utils import timezone
-from rest_framework.decorators import action
-from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView, \
-    get_object_or_404
+from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
@@ -14,7 +12,8 @@ from materials.serializers import CourseSerializer, LessonSerializer
 from users.models import Subscription
 from users.permissions import IsModer, IsOwner
 
-from materials.tasks import send_course_update_email, send_lesson_update_email
+from materials.tasks import send_course_update_email
+
 
 class CourseViewSet(ModelViewSet):
     queryset = Course.objects.all().order_by("name")
