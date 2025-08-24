@@ -62,9 +62,9 @@ jobs:
             cat > .env << 'ENV_EOF'
           SECRET_KEY=${{ secrets.SECRET_KEY }}
           DEBUG=${{ secrets.DEBUG }}
-          POSTGRES_DB=test_db
+          POSTGRES_DB=learning_system
           POSTGRES_USER=postgres
-          POSTGRES_PASSWORD=postgres
+          POSTGRES_PASSWORD=11111
           DATABASE_HOST=db
           REDIS_HOST=redis
           CELERY_BROKER_URL=redis://redis:6379
