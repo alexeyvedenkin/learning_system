@@ -23,3 +23,29 @@ jobs:
 
     - name: Run Flake8
       run: poetry run flake8 .
+
+test:
+  needs: lint
+
+  runs-on: ubuntu-latest
+
+  steps:
+  - name: Check out code
+    uses: actions/checkout@v3
+
+  - name: Set up Python
+    uses: actions/setup-python@v4
+    with:
+      python-version: '3.10'
+
+  - name: Install dependencies
+    run: |
+      python -m pip install --upgrade pip
+      pip install poetry
+      poetry install --no-root
+
+  - name: Run migrations
+    run: poetry python manage.py migrate
+
+  - name: Run tests
+    run: poetry python manage.py test
