@@ -71,7 +71,6 @@ jobs:
           CELERY_RESULT_BACKEND=redis://redis:6379
           IMAGE_TAG=${{ github.sha }}
           DOCKER_HUB_USERNAME=${{ secrets.DOCKER_HUB_USERNAME }}
-          BOT_TOKEN=${{ secrets.BOT_TOKEN }}
           ENV_EOF
             echo "✅ .env file created:"
             cat .env
