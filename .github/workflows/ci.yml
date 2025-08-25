@@ -62,20 +62,22 @@ jobs:
       - name: Deploy to Server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_NAME }}@${{ secrets.SERVER_IP }} << 'EOF'
-            # Добавление ключа хоста репозитория в known_hosts
-            ssh-keyscan github.com >> ~/.ssh/known_hosts
-          
-            sudo mkdir -p /home/***/learning_system  # Создает директорию с правами суперпользователя
-            sudo chown $USER:$USER /home/***/learning_system  # Изменяем владельца на текущего пользователя
-            cd /home/***/learning_system || exit 1    # Переход в директорию
-            if [ ! -d ".git" ]; then                  # Проверка, является ли это Git репозиторием
-            # Если .git не найден, клонируем репозиторий
-            git clone git@github.com:alexeyvedenkin/learning_system.git .  # Замените <URL_вашего_репозитория> на ваш URL
+            ssh-keyscan github.com >> ~/.ssh/known_hosts  # Добавление ключа хоста в known_hosts
+            
+            # Проверка создания директории
+            sudo mkdir -p /home/***/learning_system
+            sudo chown $USER:$USER /home/***/learning_system
+            cd /home/***/learning_system || exit 1
+            
+            if [ ! -d ".git" ]; then
+              git clone git@github.com:alexeyvedenkin/learning_system.git .  # Клонируем репозиторий
             fi
             
-            git pull || exit 1               # Выходить при ошибке выполнения
-      
-            [ -f docker-compose.yml ] || { echo "docker-compose.yml not found!"; exit 1; }
+            # Показать подробное сообщение об ошибке
+            GIT_SSH_COMMAND="ssh -v" git pull || exit 1  # Выводить подробную информацию для отладки
+            
+            # Дальнейшая часть работает без изменений
+          EOF
             cat > .env << 'ENV_EOF'
           SECRET_KEY=${{ secrets.SECRET_KEY }}
           DEBUG=${{ secrets.DEBUG }}
