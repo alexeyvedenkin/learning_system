@@ -59,7 +59,13 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_NAME }}@${{ secrets.SERVER_IP }} << 'EOF'
             sudo mkdir -p /home/***/learning_system  # Создает директорию с правами суперпользователя
             cd /home/***/learning_system || exit 1    # Переход в директорию
+            if [ ! -d ".git" ]; then                  # Проверка, является ли это Git репозиторием
+            # Если .git не найден, клонируем репозиторий
+            git clone git@github.com:alexeyvedenkin/learning_system.git .  # Замените <URL_вашего_репозитория> на ваш URL
+            fi
+            
             git pull || exit 1               # Выходить при ошибке выполнения
+      
             [ -f docker-compose.yml ] || { echo "docker-compose.yml not found!"; exit 1; }
             cat > .env << 'ENV_EOF'
           SECRET_KEY=${{ secrets.SECRET_KEY }}
