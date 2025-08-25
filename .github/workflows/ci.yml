@@ -57,6 +57,8 @@ jobs:
       - name: Deploy to Server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_NAME }}@${{ secrets.SERVER_IP }} << 'EOF'
+            mkdir -p /home/***/learning_system  # Создает директорию, если она отсутствует
+            cd /home/***/learning_system    # Переход в директорию     
             cd ~/learning_system || exit 1   # Выходить при неудаче
             git pull || exit 1               # Выходить при ошибке выполнения
             [ -f docker-compose.yml ] || { echo "docker-compose.yml not found!"; exit 1; }
