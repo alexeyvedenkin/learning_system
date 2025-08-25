@@ -49,7 +49,12 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
-      - name: Set up SSH
+      - name: Set up SSH for GitHub
+        run: |
+          eval "$(ssh-agent -s)" # Запускаем SSH-агент
+          echo "${{ secrets.SSH_KEY_FOR_GITHUB }}" | tr -d '\r' | ssh-add - # Добавляем ваш GitHub ключ
+
+      - name: Set up SSH for server
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.SSH_KEY }}
