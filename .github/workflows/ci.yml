@@ -68,10 +68,14 @@ jobs:
             sudo mkdir -p /home/***/learning_system  # Создает директорию с правами суперпользователя
             sudo chown $USER:$USER /home/***/learning_system  # Изменяем владельца на текущего пользователя
             cd /home/***/learning_system || exit 1    # Переход в директорию
-            if [ ! -d ".git" ]; then                  # Проверка, является ли это Git репозиторием
-            # Если .git не найден, клонируем репозиторий
-            git clone git@github.com:alexeyvedenkin/learning_system.git .  # Замените <URL_вашего_репозитория> на ваш URL
+            if [ ! -d ".git" ]; then  # Проверка, является ли это Git репозиторием
+              # Если .git не найден, клонируем репозиторий
+              git clone git@github.com:alexeyvedenkin/learning_system.git .  # Замените <URL_вашего_репозитория> на ваш URL
+            else
+              echo "Репозиторий уже клонирован. Выполняем git pull."
             fi
+
+            GIT_SSH_COMMAND="ssh -v" git pull || exit 1  # Выводить подробную информацию для отладки
           
           # Показать подробное сообщение об ошибке
             GIT_SSH_COMMAND="ssh -v" git pull || exit 1  # Выводить подробную информацию для отладки
