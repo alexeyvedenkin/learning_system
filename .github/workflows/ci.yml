@@ -57,6 +57,9 @@ jobs:
       - name: Deploy to Server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_NAME }}@${{ secrets.SERVER_IP }} << 'EOF'
+            # Добавление ключа хоста репозитория в known_hosts
+            ssh-keyscan github.com >> ~/.ssh/known_hosts
+          
             sudo mkdir -p /home/***/learning_system  # Создает директорию с правами суперпользователя
             sudo chown $USER:$USER /home/***/learning_system  # Изменяем владельца на текущего пользователя
             cd /home/***/learning_system || exit 1    # Переход в директорию
