@@ -34,9 +34,9 @@ jobs:
         ports:
           - 5432:5432  # Пробрасываем порт
         env: # Указываем переменные окружения
-          POSTGRES_DB: postgres
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: 11111
+          POSTGRES_DB: db
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
         options: --health-cmd "pg_isready" --health-interval 10s --health-timeout 5s --health-retries 3
 
     steps:
@@ -53,12 +53,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install poetry
           poetry install --no-root
-
-      - name: Wait for PostgreSQL
-        run: |
-          for i in {1..30}; do
-            nc -z db 5432 && break || sleep 1;
-          done
 
       - name: Run migrations
         env: # Определяем переменные окружения
