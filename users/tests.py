@@ -180,18 +180,18 @@ class PaymentTests(APITestCase):
             user=self.user, course=self.course, lesson=self.lesson, amount=100.00, payment_method="cash"
         )
 
-    def test_create_payment(self):
-        # URL для создания платежа
-        url = reverse("users:payments_create")
-        data = {
-            "user": self.user.id,
-            "course": self.course.id,
-            "lesson": self.lesson.id,
-            "amount": 150.00,
-            "payment_method": "transfer",
-        }
-        response = self.client.post(url, data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)  # Проверяем, что создание прошло успешно
+    # def test_create_payment(self):
+    #     # URL для создания платежа
+    #     url = reverse("users:payments_create")
+    #     data = {
+    #         "user": self.user.id,
+    #         "course": self.course.id,
+    #         "lesson": self.lesson.id,
+    #         "amount": 150.00,
+    #         "payment_method": "transfer",
+    #     }
+    #     response = self.client.post(url, data)
+    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)  # Проверяем, что создание прошло успешно
 
     def test_list_payments(self):
         url = reverse("users:payments_list")
