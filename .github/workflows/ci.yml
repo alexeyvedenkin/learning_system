@@ -57,11 +57,15 @@ jobs:
       - name: Run migrations
         env: # Определяем переменные окружения
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          USER: ${{ secrets.POSTGRES_USER }}  # Добавляем переменную USER
+          PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}  # Добавляем переменную PASSWORD
         run: poetry run python manage.py migrate
 
       - name: Run tests
         env: # Определяем переменные окружения
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          USER: ${{ secrets.POSTGRES_USER }}  # Добавляем переменную USER
+          PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}  # Добавляем переменную PASSWORD
         run: poetry run python manage.py test
 
   build:
