@@ -191,7 +191,7 @@ class PaymentTests(APITestCase):
     #         "payment_method": "transfer",
     #     }
     #     response = self.client.post(url, data)
-    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)  # Проверяем, что создание прошло успешно
+    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_list_payments(self):
         url = reverse("users:payments_list")
