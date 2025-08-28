@@ -100,12 +100,15 @@ jobs:
       
       - name: Deploy to Server
         run: |
+          # Подключаемся к серверу и выполняем команды
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_NAME }}@${{ secrets.SERVER_IP }} << 'EOF'
             eval "$(ssh-agent -s)"  # Запускаем SSH-агент на сервере
+            
+            # Добавьте ключ для SSH, если он необходим
             ssh-add ~/.ssh/id_rsa  # Замените на ваш ключ, если нужно
-          
+            
             ssh-keyscan github.com >> ~/.ssh/known_hosts  # Добавление ключа хоста репозитория
-          
+            
             # Проверка на наличие Git репозитория
             if [ ! -d "/home/***/learning_system/.git" ]; then  # Обратите внимание на путь
               git clone git@github.com:alexeyvedenkin/learning_system.git /home/***/learning_system  # Клонируем репозиторий
