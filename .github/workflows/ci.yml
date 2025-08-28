@@ -110,9 +110,9 @@ jobs:
             ssh-keyscan github.com >> ~/.ssh/known_hosts  # Добавление ключа хоста репозитория
       
             # Проверка на наличие Git репозитория
-            if [ ! -d "/home/USERNAME/learning_system/.git" ]; then  # Замените USERNAME на ваше имя пользователя
-              git clone git@github.com:alexeyvedenkin/learning_system.git /home/USERNAME/learning_system  # Клонируем репозиторий
+            if [ ! -d "/home/alexeyvedenkin/learning_system/.git" ]; then  # Замените USERNAME на ваше имя пользователя
+              git clone git@github.com:alexeyvedenkin/learning_system.git /home/alexeyvedenkin/learning_system  # Клонируем репозиторий
             else
-              cd /home/USERNAME/learning_system && git pull  # Переходим и обновляем репозиторий
+              cd /home/alexeyvedenkin/learning_system && git pull  # Переходим и обновляем репозиторий
             fi
           EOF
