@@ -1,4 +1,5 @@
 import os
+import sys
 from datetime import timedelta
 from pathlib import Path
 
@@ -167,3 +168,11 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': crontab(day_of_week='*', hour='0', minute='0'),  # Каждую ночь в полночь
     },
 }
+
+if 'test' in sys.argv:  # Проверяем, есть ли 'test' в аргументах командной строки
+    DATABASE = {
+        'default': {  # Исправлено: убрать '=' и оставить ':'
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'test_db.sqlite3',  # Путь к тестовому базе данных
+        },
+    }
