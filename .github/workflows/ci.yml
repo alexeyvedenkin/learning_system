@@ -105,7 +105,7 @@ jobs:
             eval "$(ssh-agent -s)"  # Запускаем SSH-агент на сервере
             
             # Добавьте ключ для SSH, если он необходим
-            ssh-add ~/.ssh/id_rsa  # Замените на ваш ключ, если нужно
+            ssh-add ~/.ssh/alex-v  # Замените на ваш ключ, если нужно
             
             ssh-keyscan github.com >> ~/.ssh/known_hosts  # Добавление ключа хоста репозитория
             
