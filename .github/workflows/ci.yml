@@ -98,18 +98,18 @@ jobs:
           eval "$(ssh-agent -s)"  # Запускаем SSH-агент
           echo "${{ secrets.SSH_KEY_FOR_GITHUB }}" | tr -d '\r' | ssh-add -  # Добавляем ваш GitHub ключ
       
-          - name: Deploy to Server
-            run: |
-              ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_NAME }}@${{ secrets.SERVER_IP }} << 'EOF'
-                eval "$(ssh-agent -s)"  # Запускаем SSH-агент на сервере
-                ssh-add ~/.ssh/id_rsa  # Замените на ваш ключ, если нужно
-              
-                ssh-keyscan github.com >> ~/.ssh/known_hosts  # Добавление ключа хоста репозитория
-              
-                # Проверка на наличие Git репозитория
-                if [ ! -d "/home/***/learning_system/.git" ]; then  # Обратите внимание на путь
-                  git clone git@github.com:alexeyvedenkin/learning_system.git /home/***/learning_system  # Клонируем репозиторий
-                else
-                  cd /home/***/learning_system && git pull  # Переходим и обновляем репозиторий
-                fi
-              EOF
+      - name: Deploy to Server
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_NAME }}@${{ secrets.SERVER_IP }} << 'EOF'
+            eval "$(ssh-agent -s)"  # Запускаем SSH-агент на сервере
+            ssh-add ~/.ssh/id_rsa  # Замените на ваш ключ, если нужно
+          
+            ssh-keyscan github.com >> ~/.ssh/known_hosts  # Добавление ключа хоста репозитория
+          
+            # Проверка на наличие Git репозитория
+            if [ ! -d "/home/***/learning_system/.git" ]; then  # Обратите внимание на путь
+              git clone git@github.com:alexeyvedenkin/learning_system.git /home/***/learning_system  # Клонируем репозиторий
+            else
+              cd /home/***/learning_system && git pull  # Переходим и обновляем репозиторий
+            fi
+          EOF
