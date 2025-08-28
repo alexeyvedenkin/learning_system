@@ -5,8 +5,10 @@ from pathlib import Path
 from celery.schedules import crontab
 from dotenv import load_dotenv
 
-load_dotenv(override=True)
+
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv(Path(BASE_DIR) / '.env', override=True)
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 
