@@ -28,6 +28,17 @@ jobs:
     runs-on: ubuntu-latest
     needs: lint
 
+    services:
+      db: # Указываем сервис
+        image: postgres:latest  # Используем образ PostgreSQL
+        ports:
+          - 5432:5432  # Пробрасываем порт
+        env: # Указываем переменные окружения
+          POSTGRES_DB: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: 11111
+        options: --health-cmd "pg_isready" --health-interval 10s --health-timeout 5s --health-retries 3
+
     steps:
       - name: Check out code
         uses: actions/checkout@v3
