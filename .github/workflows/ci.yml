@@ -86,44 +86,35 @@ jobs:
         run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
 
   deploy:
-    runs-on: ubuntu-latest
+
     needs: build
 
+    runs-on: ubuntu-latest
+
     steps:
+
       - name: Set up SSH
+
         uses: webfactory/ssh-agent@v0.9.0
+
         with:
+
           ssh-private-key: ${{ secrets.SSH_KEY }}
 
-      - name: Check out code
-        uses: actions/checkout@v3
 
-      - name: Set up SSH for GitHub
-        run: |
-          eval "$(ssh-agent -s)"  # Запускаем SSH-агент
-          echo "${{ secrets.SSH_KEY_FOR_GITHUB }}" | tr -d '\r' | ssh-add -  # Добавляем GitHub ключ
 
-      - name: Connect to VM and run deployment commands
+      - name: Deploy to Server
+
         run: |
+          
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_NAME }}@${{ secrets.SERVER_IP }} << 'EOF'
-            # Обновляем образ и запускаем контейнер
-            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
-            docker stop myapp || true
-            docker rm myapp || true
-            docker run -d --name myapp -p 80:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
-  
-            # Убедимся, что SSH-агент запущен (это уже сделано на предыдущем шаге, в этом нет необходимости)
-            # eval "$(ssh-agent -s)"  # Запускаем SSH-агент на сервере
-  
-            # Добавляем ключ для SSH из переменной окружения (используем в предыдущем шаге)
-            # echo "${{ secrets.SSH_KEY }}" | tr -d '\r' | ssh-add -  # Используем закрытый SSH-ключ для сервера (уже добавлено в предыдущих шагах)
-            
-            ssh-keyscan github.com >> ~/.ssh/known_hosts  # Добавление ключа хоста репозитория
-  
-            # Проверка на наличие Git репозитория
-            if [ ! -d "/home/alexeyvedenkin/learning_system/.git" ]; then
-              git clone git@github.com:alexeyvedenkin/learning_system.git /home/alexeyvedenkin/learning_system || { echo "Git clone failed"; exit 1; }  # Клонируем репозиторий
-            else
-              cd /home/alexeyvedenkin/learning_system && git pull || { echo "Git pull failed"; exit 1; }  # Переходим и обновляем репозиторий
-            fi
-          EOF
+          
+            sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+          
+            sudo docker stop myapp || true
+          
+            sudo docker rm myapp || true
+          
+            sudo docker run --name myapp -p 80:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+          
+            EOF
