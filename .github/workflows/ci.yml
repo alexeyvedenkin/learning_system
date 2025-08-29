@@ -96,11 +96,15 @@ jobs:
       - name: Set up SSH for GitHub
         run: |
           eval "$(ssh-agent -s)"  # Запускаем SSH-агент
-          echo "${{ secrets.SSH_KEY_FOR_GITHUB }}" | tr -d '\r' | ssh-add -  # Добавляем ваш GitHub ключ
+          echo "${{ secrets.SSH_KEY_FOR_GITHUB }}" | tr -d '\r' | ssh-add -  # Добавляем GitHub ключ
 
       - name: Deploy to Server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_NAME }}@${{ secrets.SERVER_IP }} << 'EOF'
+          docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+          docker stop myapp || true
+          docker rm myapp || true
+          docker run -d --name myapp -p 80:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
             eval "$(ssh-agent -s)"  # Запускаем SSH-агент на сервере
         
             # Добавляем ключ для SSH из переменной окружения
