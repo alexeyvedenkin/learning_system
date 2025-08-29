@@ -98,17 +98,6 @@ jobs:
           eval "$(ssh-agent -s)"  # Запускаем SSH-агент
           echo "${{ secrets.SSH_KEY_FOR_GITHUB }}" | tr -d '\r' | ssh-add -  # Добавляем ваш GitHub ключ
 
-      - name: Проверка SERVER_IP
-        run: |
-          echo "Проверяем подключение к серверу по IP: ${{ secrets.SERVER_IP }}"
-          # Пробуем ping с увеличенным таймаутом
-          if ping -c 1 -W 5 ${{ secrets.SERVER_IP }} &> /dev/null; then
-            echo "Подключение успешно."
-          else
-            echo "Не удалось подключиться к серверу. Проверьте значение SERVER_IP."
-            exit 1  # Завершаем работу шага с ошибкой
-          fi
-
       - name: Deploy to Server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_NAME }}@${{ secrets.SERVER_IP }} << 'EOF'
