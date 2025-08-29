@@ -103,6 +103,10 @@ jobs:
           eval "$(ssh-agent -s)"  # Запускаем SSH-агент
           echo "${{ secrets.SSH_KEY_FOR_GITHUB }}" | tr -d '\r' | ssh-add -  # Добавляем GitHub ключ
 
+      - name: Connect to VM and run commands
+        run: |
+          ssh alexey_vedenkin@130.193.53.42 "ls -ld /home/***"
+
       - name: Deploy to Server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_NAME }}@${{ secrets.SERVER_IP }} << 'EOF'
