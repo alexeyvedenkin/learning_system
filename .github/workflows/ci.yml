@@ -105,7 +105,7 @@ jobs:
 
       - name: Connect to VM and run commands
         run: |
-          ssh alexey_vedenkin@130.193.53.42 "ls -ld /home/alexey_vedenkin"
+          ssh -i /mnt/c/Users/admin/.ssh/yandex_cloud alexey_vedenkin@130.193.53.42
 
       - name: Deploy to Server
         run: |
