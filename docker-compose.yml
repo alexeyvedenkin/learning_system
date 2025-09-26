@@ -2,13 +2,6 @@ services:
   web:
     build: .
     command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-    environment:
-      - DEBUG=True
-      - DATABASE_HOST=db
-      - REDIS_HOST=redis
-      - SECRET_KEY=${SECRET_KEY}
-      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
-      - CELERY_BACKEND=${CELERY_RESULT_BACKEND}
     volumes:
       - .:/code
       - static_volume:/code/static
